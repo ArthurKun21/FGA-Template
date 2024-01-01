@@ -254,9 +254,10 @@ def save_the_information(
             "Height": resized_bottom - resized_top,
         },
     }
-
+    information_name = f"{reference_image_path.stem}_information.toml"
+    information_path = template_image_path.parent / information_name
     try:
-        with open("information.toml", "w", encoding="utf-8") as file:
+        with open(information_path, "w", encoding="utf-8") as file:
             toml.dump(information_dict, file)
     except FileNotFoundError:
         console.print("[bold red]ERROR:[/bold red] File not found.")
