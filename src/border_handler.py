@@ -26,10 +26,10 @@ def get_border(
     with Image.open(image_path) as img:
         width, height = img.size
 
-    left_border = 0
-    top_border = 0
-    right_border = 0
-    bottom_border = 0
+    left_border = 0 if left is None else left
+    top_border = 0 if top is None else top
+    right_border = 0 if right is None else right
+    bottom_border = 0 if bottom is None else bottom
 
     while True:
         if left_border != right_border and (right_border - left_border) > 1:
