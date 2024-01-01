@@ -64,3 +64,14 @@ def resize_template_to_reference(
     except FileNotFoundError:
         console.print("[red]Image not found![/red]")
         return None
+
+def get_size(
+        image_path: Path,
+):
+    try:
+        with Image.open(image_path) as img:
+            width, height = img.size
+    except FileNotFoundError:
+        console.print("[red]Image not found![/red]")
+        exit(0)
+    return width, height

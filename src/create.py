@@ -8,6 +8,7 @@ from typing import Optional
 import directory_handler
 import border_handler
 import image_handler
+import information_handler
 
 
 console = Console()
@@ -56,3 +57,12 @@ def run(
         console.print("[red]Failed to create template![/red]")
         directory_handler.cleanup(tmp_folder, crop_image_path)
         return
+
+    information_handler.print_table_of_information(
+        reference_image_path=image_path,
+        template_image_path=resized_template_path,
+        left=left_border,
+        top=top_border,
+        right=right_border,
+        bottom=bottom_border,
+    )
