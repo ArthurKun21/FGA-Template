@@ -14,6 +14,8 @@ def region(
     right: int,
     bottom: int,
 ):
+    console.print(f"Drawing region on image: [blue]{image_path}[/blue]")
+
     region_image_name = f"{image_path.stem}_region{image_path.suffix}"
     region_image_path = tmp_folder / region_image_name
     try:
@@ -41,6 +43,8 @@ def location(
     x: int,
     y: int,
 ):
+    console.print(f"Drawing location on image: [blue]{image_path}[/blue]")
+    
     location_image_name = f"{image_path.stem}_location{image_path.suffix}"
     location_image_path = tmp_folder / location_image_name
     try:
