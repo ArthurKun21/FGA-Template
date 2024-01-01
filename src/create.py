@@ -67,3 +67,6 @@ def run(
         bottom=bottom_border,
         draw_information=True,
     )
+
+    # Perform cleanup
+    directory_handler.cleanup(crop_image_path)
