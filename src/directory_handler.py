@@ -1,7 +1,9 @@
+from calendar import c
 from pathlib import Path
 from typing import Literal
 from datetime import datetime
 from rich.console import Console
+import shutil
 
 console = Console()
 
@@ -22,3 +24,22 @@ def create_tmp_folder(
 
     console.print(f"Created temporary folder: [blue]{tmp_folder}[/blue]")
     return tmp_folder
+
+def cleanup(
+        *args
+):
+    console.print("Cleaning up...")
+    for arg in args:
+        if isinstance(arg, Path):
+            if arg.is_dir():
+                try:
+                    shutil.rmtree(arg)
+                    console.print(f"Removed directory: [blue]{arg}[/blue]")
+                except FileNotFoundError:
+                    console.print(f"Failed to remove directory: [red]{arg}[/red]")
+            elif arg.is_file():
+                try:
+                    arg.unlink(missing_ok=True)
+                    console.print(f"Removed file: [blue]{arg}[/blue]")
+                except FileNotFoundError:
+                    console.print(f"Failed to remove file: [red]{arg}[/red]")
