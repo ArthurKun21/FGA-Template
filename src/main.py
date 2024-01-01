@@ -126,11 +126,11 @@ def main(
         )
         task_to_perform = task_list[prompt_task - 1]
     else:
-        task_list = [x for x in task_list if x.__name__.lower() == task.lower()]
-        if len(task_list) == 0:
+        check_list = [x for x in task_list if x.__name__.lower() == task.lower()]
+        if len(check_list) == 0:
             console.print(f"[bold red]Task {task} not found![/bold red]")
             return
-        task_to_perform = task_list[0]
+        task_to_perform = check_list[0]
 
     if hasattr(task_to_perform, "run"):
         task_to_perform.run(
