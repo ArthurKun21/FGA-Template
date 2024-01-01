@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "fga-template"
+version = "0.1.0"
+description = "Helps FGA with Template related issues."
+authors = ["arthur <16458204+ArthurKun21@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+pillow = "^10.1.0"
+click = "^8.1.7"
+rich = "^13.7.0"
+ruff = "^0.1.9"
+opencv-contrib-python = "^4.9.0.80"
+toml = "^0.10.2"
+types-toml = "^0.10.8.7"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
