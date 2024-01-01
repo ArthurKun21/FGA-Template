@@ -1,6 +1,4 @@
-import sys
 from pathlib import Path
-from turtle import width
 
 from PIL import Image, ImageDraw
 from rich.console import Console
