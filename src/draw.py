@@ -2,6 +2,12 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw
 from rich.console import Console
+from typing import Optional
+from rich.prompt import Prompt
+
+import border_handler
+import directory_handler
+import information_handler
 
 console = Console()
 
@@ -44,7 +50,7 @@ def location(
     y: int,
 ):
     console.print(f"Drawing location on image: [blue]{image_path}[/blue]")
-    
+
     location_image_name = f"{image_path.stem}_location{image_path.suffix}"
     location_image_path = tmp_folder / location_image_name
     try:
@@ -62,6 +68,77 @@ def location(
 
 
 def run(
+    image_path: Path,
+    left: Optional[int] = None,
+    top: Optional[int] = None,
+    right: Optional[int] = None,
+    bottom: Optional[int] = None,
     **kwargs,
 ):
-    pass
+    console.print(f"Creating Draw from image: [blue]{image_path}[/blue]")
+    tmp_folder = directory_handler.create_tmp_folder(
+        image=image_path, function="draw"
+    )
+
+    left_border, top_border, right_border, bottom_border = border_handler.get_border(
+        image_path=image_path,
+        left=left,
+        top=top,
+        right=right,
+        bottom=bottom,
+    )
+
+    mode_of_operations = Prompt.ask(
+        prompt="Normal or Reversed",
+        choices=["normal", "reversed"],
+        default="normal",
+        show_default=True,
+    )
+    if mode_of_operations == "normal":
+        region(
+            tmp_folder=tmp_folder,
+            image_path=image_path,
+            left=left_border,
+            top=top_border,
+            right=right_border,
+            bottom=bottom_border,
+        )
+        location(
+            tmp_folder=tmp_folder,
+            image_path=image_path,
+            x=left_border,
+            y=top_border,
+        )
+    else:
+        (
+            resized_width,
+            resized_height,
+            orig_left,
+            orig_top,
+            orig_right,
+            orig_bottom,
+        ) = information_handler.get_border_information_from_resize(
+            reference_image_path=image_path,
+            resize_left=left_border,
+            resize_top=top_border,
+            resize_right=right_border,
+            resize_bottom=bottom_border,
+        )
+
+        location_x = int(resized_width / 2) + orig_left
+        location_y = int(resized_height / 2) + orig_top
+
+        region(
+            tmp_folder=tmp_folder,
+            image_path=image_path,
+            left=orig_left,
+            top=orig_top,
+            right=orig_right,
+            bottom=orig_bottom,
+        )
+        location(
+            tmp_folder=tmp_folder,
+            image_path=image_path,
+            x=location_x,
+            y=location_y,
+        )
