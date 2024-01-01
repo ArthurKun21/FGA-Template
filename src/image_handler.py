@@ -21,9 +21,8 @@ def crop_image(
         crop_image_path_name = f"{image_path.stem}_crop{image_path.suffix}"
         crop_image_path = tmp_folder / crop_image_path_name
         with Image.open(image_path) as img:
-            width, height = img.size
             img = img.crop((left, top, right, bottom))
-            img.save(tmp_folder / image_path.name)
+            img.save(crop_image_path, "PNG")
         return crop_image_path
     except FileNotFoundError:
         console.print("[red]Image not found![/red]")
@@ -60,7 +59,7 @@ def resize_template_to_reference(
                     (int(template_resize_width), int(template_resize_height)),
                     Image.Resampling.LANCZOS,
                 )
-                template_img.save(resize_image_path)
+                template_img.save(resize_image_path, "PNG")
         return resize_image_path
     except FileNotFoundError:
         console.print("[red]Image not found![/red]")
