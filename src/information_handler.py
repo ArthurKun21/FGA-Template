@@ -49,6 +49,40 @@ def get_border_information(
     )
 
 
+def get_border_information_from_resize(
+    reference_image_path: Path,
+    resize_left: int,
+    resize_top: int,
+    resize_right: int,
+    resize_bottom: int,
+):
+    try:
+        with Image.open(reference_image_path) as img:
+            width, height = img.size
+    except FileNotFoundError:
+        console.print("[red]Image not found![/red]")
+        exit(0)
+
+    reference_image_resize_height = height_reference
+    reference_image_resize_width = math.floor(
+        (width / height) * reference_image_resize_height
+    )
+
+    left_border = math.floor((resize_left / reference_image_resize_width) * width)
+    top_border = math.floor((resize_top / reference_image_resize_height) * height)
+    right_border = math.floor((resize_right / reference_image_resize_width) * width)
+    bottom_border = math.floor((resize_bottom / reference_image_resize_height) * height)
+
+    return (
+        reference_image_resize_width,
+        reference_image_resize_height,
+        left_border,
+        top_border,
+        right_border,
+        bottom_border,
+    )
+
+
 def create_region(
     left_border: int,
     top_border: int,
