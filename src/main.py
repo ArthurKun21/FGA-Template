@@ -155,7 +155,7 @@ def main(
 
         prompt_task = IntPrompt.ask(
             "Select a task",
-            choices=[x for x in range(1, len(task_list) + 1)],
+            choices=[f"{x}" for x in range(1, len(task_list) + 1)],
         )
         task_to_perform = task_list[prompt_task - 1]
     else:
