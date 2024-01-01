@@ -262,6 +262,17 @@ files = [
 ]
 
 [[package]]
+name = "types-pillow"
+version = "10.1.0.2"
+description = "Typing stubs for Pillow"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "types-Pillow-10.1.0.2.tar.gz", hash = "sha256:525c1c5ee67b0ac1721c40d2bc618226ef2123c347e527e14e05b920721a13b9"},
+    {file = "types_Pillow-10.1.0.2-py3-none-any.whl", hash = "sha256:131078ffa547bf9a201d39ffcdc65633e108148085f4f1b07d4647fcfec6e923"},
+]
+
+[[package]]
 name = "types-toml"
 version = "0.10.8.7"
 description = "Typing stubs for toml"
@@ -275,4 +286,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "54abad49e08072d7848639aebca193574d58638df6e9fd812b09dda1f8cb87d0"
+content-hash = "398f42fae1a466fab35c612c856e23635728f92c30bb7b6e0b1ab4d74d5653ec"
