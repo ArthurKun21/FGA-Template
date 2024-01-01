@@ -27,6 +27,33 @@ image_extensions = [".png", ".jpg"]
 task_list = [create, match, draw, reverse]
 
 
+def get_image() -> Optional[Path]:
+    image_files = [
+        x for x in cwd.iterdir() if x.is_file() and x.suffix in image_extensions
+    ]
+    if len(image_files) > 1:
+        images_table = Table(show_lines=True)
+        images_table.add_column("Index", justify="center")
+        images_table.add_column("Image name", justify="left")
+        for index, x in enumerate(image_files):
+            images_table.add_row(f"{index + 1}", f"{x.name}")
+        console.print(images_table)
+        index_to_process = IntPrompt.ask(
+            prompt="Which of the following screenshot would be processed? "
+            "Enter the Index number",
+            choices=[x for x in range(1, len(image_files) + 1)],
+            show_choices=False,
+        )
+        chosen_image = image_files[index_to_process - 1]
+    elif len(image_files) == 1:
+        chosen_image = image_files[0]
+    else:
+        console.print("[red]There are no images found.")
+        return None
+
+    return chosen_image
+
+
 @click.command()
 @click.option(
     "--task",
@@ -106,6 +133,12 @@ def main(
     width: Optional[int],
 ):
     console.print(f"Current Working Directory:\t[yellow]{cwd}")
+
+    if image is None:
+        image = get_image()
+        if image is None:
+            console.print("[red]No image found![/red]")
+            return
 
     if task is None:
         table_task = Table(title="Tasks", title_justify="center", show_lines=True)
