@@ -2,8 +2,9 @@ import math
 from pathlib import Path
 from typing import Literal
 
-import toml
+import draw
 import image_handler
+import toml
 from PIL import Image
 from rich.console import Console
 from rich.table import Table
@@ -91,6 +92,7 @@ def print_table_of_information(
     top: int,
     right: int,
     bottom: int,
+    draw_information: bool = False,
 ):
     (
         resize_width,
@@ -180,6 +182,23 @@ def print_table_of_information(
         resized_right=right_border,
         resized_bottom=bottom_border,
     )
+
+    if draw_information:
+        draw.region(
+            tmp_folder=template_image_path.parent,
+            image_path=reference_image_path,
+            left=left_border,
+            top=top_border,
+            right=right_border,
+            bottom=bottom_border,
+        )
+
+        draw.location(
+            tmp_folder=template_image_path.parent,
+            image_path=reference_image_path,
+            x=template_center_x,
+            y=template_center_y,
+        )
 
 
 def save_the_information(

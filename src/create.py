@@ -65,4 +65,5 @@ def run(
         top=top_border,
         right=right_border,
         bottom=bottom_border,
+        draw_information=True,
     )
