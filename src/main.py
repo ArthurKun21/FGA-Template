@@ -167,7 +167,7 @@ def main(
 
     if hasattr(task_to_perform, "run"):
         task_to_perform.run(
-            image=image,
+            image_path=image,
             template=template,
             left=left,
             right=right,
