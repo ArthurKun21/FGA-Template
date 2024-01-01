@@ -22,7 +22,9 @@ def run(
     **kwargs,
 ):
     console.print(f"Creating template from image: [blue]{image_path}[/blue]")
-    tmp_folder = directory_handler.create_tmp_folder(image=image_path, function="create")
+    tmp_folder = directory_handler.create_tmp_folder(
+        image=image_path, function="create"
+    )
 
     left_border, top_border, right_border, bottom_border = border_handler.get_border(
         image_path=image_path,
@@ -42,6 +44,7 @@ def run(
     )
     if crop_image_path is None:
         console.print("[red]Failed to create template![/red]")
+        directory_handler.cleanup(tmp_folder)
         return
 
     resized_template_path = image_handler.resize_template_to_reference(
@@ -51,5 +54,5 @@ def run(
     )
     if resized_template_path is None:
         console.print("[red]Failed to create template![/red]")
-        crop_image_path.unlink(missing_ok=True)
+        directory_handler.cleanup(tmp_folder, crop_image_path)
         return
