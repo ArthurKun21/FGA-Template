@@ -1,13 +1,12 @@
 from pathlib import Path
-
-from PIL import Image, ImageDraw
-from rich.console import Console
 from typing import Optional
-from rich.prompt import Prompt
 
 import border_handler
 import directory_handler
 import information_handler
+from PIL import Image, ImageDraw
+from rich.console import Console
+from rich.prompt import Prompt
 
 console = Console()
 
@@ -73,12 +72,11 @@ def run(
     top: Optional[int] = None,
     right: Optional[int] = None,
     bottom: Optional[int] = None,
+    operations: Optional[str] = None,
     **kwargs,
 ):
     console.print(f"Creating Draw from image: [blue]{image_path}[/blue]")
-    tmp_folder = directory_handler.create_tmp_folder(
-        image=image_path, function="draw"
-    )
+    tmp_folder = directory_handler.create_tmp_folder(image=image_path, function="draw")
 
     left_border, top_border, right_border, bottom_border = border_handler.get_border(
         image_path=image_path,
@@ -87,14 +85,18 @@ def run(
         right=right,
         bottom=bottom,
     )
+    operation_choices = ["normal", "reversed"]
 
-    mode_of_operations = Prompt.ask(
-        prompt="Normal or Reversed",
-        choices=["normal", "reversed"],
-        default="normal",
-        show_default=True,
-    )
-    if mode_of_operations == "normal":
+    if operations is None or operations not in operation_choices:
+        mode_of_operations = Prompt.ask(
+            prompt="Normal or Reversed",
+            choices=operation_choices,
+            default="normal",
+            show_default=True,
+        )
+        operations = mode_of_operations
+
+    if operations == "normal":
         region(
             tmp_folder=tmp_folder,
             image_path=image_path,
