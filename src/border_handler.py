@@ -35,12 +35,12 @@ def get_border(
         if left_border != right_border and (right_border - left_border) > 1:
             break
         left_border = IntPrompt.ask(
-            prompt="How many pixels is the left border?",
+            prompt=f"How many pixels is the left border? [yellow]( 0 ~ {width} )[/yellow]",
             show_choices=False,
             choices=[f"{x}" for x in range(0, width)],
         )
         right_border = IntPrompt.ask(
-            prompt="How many pixels is the right border?",
+            prompt=f"How many pixels is the right border? [red]( {left_border} ~ {width} )[/red]",
             show_choices=False,
             choices=[f"{x}" for x in range(left_border, width)],
         )
@@ -52,12 +52,12 @@ def get_border(
         if top_border != bottom_border and (bottom_border - top_border) > 1:
             break
         top_border = IntPrompt.ask(
-            prompt="How many pixels is the top border?",
+            prompt=f"How many pixels is the top border? [green]( 0 ~ {height} )[/green]",
             show_choices=False,
             choices=[f"{x}" for x in range(0, height)],
         )
         bottom_border = IntPrompt.ask(
-            prompt="How many pixels is the bottom border?",
+            prompt=f"How many pixels is the bottom border? [blue]( {top_border} ~ {height} )[/blue]",
             show_choices=False,
             choices=[f"{x}" for x in range(top_border, height)],
         )
