@@ -41,7 +41,7 @@ def get_image() -> Optional[Path]:
         index_to_process = IntPrompt.ask(
             prompt="Which of the following screenshot would be processed? "
             "Enter the Index number",
-            choices=[x for x in range(1, len(image_files) + 1)],
+            choices=[f"{x}" for x in range(1, len(image_files) + 1)],
             show_choices=False,
         )
         chosen_image = image_files[index_to_process - 1]
