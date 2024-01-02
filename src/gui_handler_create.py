@@ -7,12 +7,12 @@ import information_handler
 import PySimpleGUI as sg
 from gui_components import (
     create_directory_column,
+    create_information_layout,
+    load_directory_images_column,
+    load_image_size_information,
     load_image_window,
     load_images_from_directory,
     text_input_validation,
-    load_image_size_information,
-    load_directory_images_column,
-    create_information_layout
 )
 from rich.console import Console
 
@@ -22,15 +22,13 @@ cwd = Path(__file__).cwd()
 image_extensions = [".png", ".jpg"]
 
 
-
-
-
 def create_values_column():
     values_column = sg.Col(
         [
             [
                 sg.Text(
                     "Left",
+                    tooltip="Raw pixel value from the left side of the image",
                 ),
                 sg.Push(),
                 text_input_validation(
@@ -41,7 +39,10 @@ def create_values_column():
                     justification="center",
                 ),
                 sg.Push(),
-                sg.Text("Right"),
+                sg.Text(
+                    "Right",
+                    tooltip="Raw pixel value from the right side of the image",
+                ),
                 sg.Push(),
                 text_input_validation(
                     inputKey="RightCreate",
@@ -52,7 +53,10 @@ def create_values_column():
                 ),
             ],
             [
-                sg.Text("Top"),
+                sg.Text(
+                    "Top",
+                    tooltip="Raw pixel value from the top side of the image",
+                    ),
                 text_input_validation(
                     inputKey="TopCreate",
                     default_text="0",
@@ -60,7 +64,10 @@ def create_values_column():
                     size=(25, 1),
                     justification="center",
                 ),
-                sg.Text("Bottom"),
+                sg.Text(
+                    "Bottom",
+                    tooltip="Raw pixel value from the bottom side of the image",
+                    ),
                 sg.Push(),
                 text_input_validation(
                     inputKey="BottomCreate",
@@ -277,9 +284,7 @@ def template_create_events_handler(window, event, values):
             selected_image_text = textwrap.fill(f"{path.name}", 20)
             window["SelectedImageCreate"].update(selected_image_text)
             load_image_size_information(
-                window=window,
-                image_path=selected_image_name,
-                function="Create"
+                window=window, image_path=selected_image_name, function="Create"
             )
             window["OpenImageCreate"].update(visible=True)
             show_template_create_calculations(window, values)
