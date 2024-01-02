@@ -3,6 +3,7 @@ from pathlib import Path
 
 import create
 import image_handler
+import information_handler
 import PySimpleGUI as sg
 from gui_components import load_image_window, text_input_validation
 from rich.console import Console
@@ -160,7 +161,7 @@ def template_create_layout():
                     load_directory_images_column(),
                 ],
                 expand_x=True,
-                size=(720, 350),
+                size=(720, 250),
             )
         ],
         [
@@ -175,8 +176,90 @@ def template_create_layout():
         [
             sg.Button("Submit", key="ButtonSubmitCreate", enable_events=True),
         ],
+        [
+            sg.Frame(
+                "Information",
+                create_information_layout(),
+            )
+        ],
     ]
     return layout
+
+def create_information_layout():
+    layout = [
+        [
+            sg.Text("Left Border"),
+            sg.Push(),
+            sg.Text("", key="LeftBorderInformation"),
+            sg.Push(),
+            sg.Text("Top Border"),
+            sg.Push(),
+            sg.Text("", key="TopBorderInformation"),
+        ],
+        [
+            sg.Text("Right Border"),
+            sg.Push(),
+            sg.Text("", key="RightBorderInformation"),
+            sg.Push(),
+            sg.Text("Bottom Border"),
+            sg.Push(),
+            sg.Text("", key="BottomBorderInformation"),
+        ],
+        [
+            sg.Text("Template Width"),
+            sg.Push(),
+            sg.Text("", key="WidthInformation"),
+            sg.Push(),
+            sg.Text("Template Height"),
+            sg.Push(),
+            sg.Text("", key="HeightInformation"),
+        ]
+    ]
+    return layout
+
+def show_template_create_calculations(window, values):
+    try:
+        left_input = int(values["LeftCreate"])
+        top_input = int(values["TopCreate"])
+        right_input = int(values["RightCreate"])
+        bottom_input = int(values["BottomCreate"])
+
+        if right_input < left_input or right_input == left_input:
+            raise ValueError("Right value is less than or equal to left value")
+        if bottom_input < top_input or bottom_input == top_input:
+            raise ValueError("Bottom value is less than or equal to top value")
+
+        selected_image_name = values["ImageCreateListbox"][0]
+        path = Path(selected_image_name)
+        if path.exists():
+            (
+                left_border,
+                top_border,
+                right_border,
+                bottom_border,
+                width_template,
+                height_template,
+                _,
+                _,
+                _,
+                _,
+                _,
+                _,
+            ) = information_handler.fetch_image_manipulation_information(
+                path, left_input, top_input, right_input, bottom_input
+            )
+            window["LeftBorderInformation"].update(f"{left_border}")
+            window["TopBorderInformation"].update(f"{top_border}")
+            window["RightBorderInformation"].update(f"{right_border}")
+            window["BottomBorderInformation"].update(f"{bottom_border}")
+            window["WidthInformation"].update(f"{width_template}")
+            window["HeightInformation"].update(f"{height_template}")
+    except ValueError:
+        pass
+    except FileNotFoundError:
+        pass
+    except IndexError:
+        pass
 
 
 def template_create_events_handler(window, event, values):
@@ -238,6 +321,7 @@ def template_create_events_handler(window, event, values):
             window["LeftCreateValidation"].update(
                 "",
             )
+            show_template_create_calculations(window, values)
         except ValueError:
             window["LeftCreateValidation"].update("Invalid value", text_color="red")
 
@@ -247,6 +331,7 @@ def template_create_events_handler(window, event, values):
             window["TopCreateValidation"].update(
                 "",
             )
+            show_template_create_calculations(window, values)
         except ValueError:
             window["TopCreateValidation"].update("Invalid value", text_color="red")
 
@@ -256,6 +341,7 @@ def template_create_events_handler(window, event, values):
             window["BottomCreateValidation"].update(
                 "",
             )
+            show_template_create_calculations(window, values)
         except ValueError:
             window["BottomCreateValidation"].update("Invalid value", text_color="red")
 
@@ -265,6 +351,7 @@ def template_create_events_handler(window, event, values):
             window["RightCreateValidation"].update(
                 "",
             )
+            show_template_create_calculations(window, values)
         except ValueError:
             window["RightCreateValidation"].update("Invalid value", text_color="red")
 
