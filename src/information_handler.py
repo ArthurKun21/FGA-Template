@@ -70,8 +70,8 @@ def get_border_information_from_resize(
 
     left_border = math.floor((resize_left / reference_image_resize_width) * width)
     top_border = math.floor((resize_top / reference_image_resize_height) * height)
-    right_border = math.floor((resize_right / reference_image_resize_width) * width)
-    bottom_border = math.floor((resize_bottom / reference_image_resize_height) * height)
+    right_border = math.floor(resize_right / reference_image_resize_width * width)
+    bottom_border = math.floor(resize_bottom / reference_image_resize_height * height)
 
     return (
         reference_image_resize_width,

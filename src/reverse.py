@@ -28,7 +28,12 @@ def run(
     else:
         measurement_type = border_handler.MeasurementType.NORMAL
 
-    left_border, top_border, right_border, bottom_border = border_handler.get_border_from_resize(
+    (
+        left_border,
+        top_border,
+        right_border,
+        bottom_border,
+    ) = border_handler.get_border_from_resize(
         left=left,
         top=top,
         template_height=height,
@@ -87,4 +92,4 @@ def run(
     )
 
     # Perform cleanup
-    directory_handler.cleanup(crop_image_path)
+    # directory_handler.cleanup(crop_image_path)
