@@ -163,13 +163,13 @@ def template_reverse_layout():
             )
         ],
         [
-            sg.Button("Submit", key="ButtonSubmitReverse", enable_events=True),
-        ],
-        [
             sg.Frame(
                 "Mode",
                 create_operations_layout(function="Reverse"),
             )
+        ],
+        [
+            sg.Button("Submit", key="ButtonSubmitReverse", enable_events=True),
         ],
         [
             sg.Frame(
