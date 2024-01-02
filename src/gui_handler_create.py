@@ -182,20 +182,40 @@ def template_create_events_handler(window, event, values):
     if event == "ButtonSubmitCreate":
         try:
             left_input = int(values["LeftCreate"])
-        except ValueError:
-            left_input = 0
-        try:
             top_input = int(values["TopCreate"])
-        except ValueError:
-            top_input = 0
-        try:
             right_input = int(values["RightCreate"])
-        except ValueError:
-            right_input = 0
-        try:
             bottom_input = int(values["BottomCreate"])
+            selected_image_name = values["ImageCreateListbox"][0]
+            path = Path(selected_image_name)
+            if path.exists():
+                pass
         except ValueError:
-            bottom_input = 0
+            console.print_exception()
+            sg.popup(
+                "Value error/s",
+                text_color="red",
+                auto_close_duration=2,
+                auto_close=True,
+                no_titlebar=True,
+            )
+        except FileNotFoundError:
+            console.print_exception()
+            sg.popup(
+                "FileNotFoundError",
+                text_color="red",
+                auto_close_duration=2,
+                auto_close=True,
+                no_titlebar=True,
+            )
+        except IndexError:
+            console.print_exception()
+            sg.popup(
+                "No selected item",
+                text_color="red",
+                auto_close_duration=2,
+                auto_close=True,
+                no_titlebar=True,
+            )
 
     if event == "LeftCreate":
         try:
