@@ -38,6 +38,19 @@ def reverse_values_column():
                 ),
                 sg.Push(),
                 sg.Text(
+                    "Top",
+                    tooltip="Top value of the template",
+                ),
+                text_input_validation(
+                    inputKey="TopReverse",
+                    default_text="0",
+                    expand_x=False,
+                    size=(25, 1),
+                    justification="center",
+                ),
+            ],
+            [
+                sg.Text(
                     "Width",
                     tooltip="Width value of the template",
                 ),
@@ -49,19 +62,7 @@ def reverse_values_column():
                     size=(25, 1),
                     justification="center",
                 ),
-            ],
-            [
-                sg.Text(
-                    "Top",
-                    tooltip="Top value of the template",
-                ),
-                text_input_validation(
-                    inputKey="TopReverse",
-                    default_text="0",
-                    expand_x=False,
-                    size=(25, 1),
-                    justification="center",
-                ),
+                sg.Push(),
                 sg.Text(
                     "Height",
                     tooltip="Height value of the template",
