@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from typing import Optional
 
@@ -24,6 +25,10 @@ def load_image_window(image_path: Path, info_path: Path):
     layout = [
         [
             sg.Image(filename=f"{image_path}"),
+        ],
+        [
+            sg.Button("Load Directory", key="LoadDirectoryButton"),
+            sg.Text(f"{image_path.parent}", key="LoadDirectoryText"),
         ],
         [
             sg.Text("Normal Region"),
@@ -122,7 +127,7 @@ def load_image_window(image_path: Path, info_path: Path):
             )
         ],
     ]
-    window = sg.Window(f"{image_path.name}", layout, size=(800, 600))
+    window = sg.Window(f"{image_path.name}", layout, size=(800, 800))
     while True:
         event, _ = window.read()
         if event == sg.WIN_CLOSED:
@@ -139,6 +144,8 @@ def load_image_window(image_path: Path, info_path: Path):
             copy_to_clipboard(text=center_location)
         if event == "RightLocationCopy":
             copy_to_clipboard(text=right_location)
+        if event == "LoadDirectoryButton":
+            os.startfile(image_path.parent)
     window.close()
 
 
