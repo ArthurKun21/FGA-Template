@@ -159,9 +159,9 @@ def template_reverse_layout():
 
 def template_reverse_events_handler(window, event, values):
     operations = [
-        f"NORMALReverse",
-        f"CENTERReverse",
-        f"RIGHTReverse",
+        "NORMALReverse",
+        "CENTERReverse",
+        "RIGHTReverse",
     ]
     selected_color = ("red", "white")
     if event in operations:
