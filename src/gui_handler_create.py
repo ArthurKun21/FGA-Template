@@ -147,7 +147,7 @@ def template_create_layout():
     layout = [
         [
             sg.Frame(
-                "File",
+                "Directory",
                 [
                     [create_directory_column()],
                 ],
