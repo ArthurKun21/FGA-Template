@@ -46,7 +46,7 @@ def run(
     if crop_image_path is None:
         console.print("[red]Failed to create template![/red]")
         directory_handler.cleanup(tmp_folder)
-        return
+        return None, None
 
     resized_template_path = image_handler.resize_template_to_reference(
         original_image_path=image_path,
@@ -56,9 +56,9 @@ def run(
     if resized_template_path is None:
         console.print("[red]Failed to create template![/red]")
         directory_handler.cleanup(tmp_folder, crop_image_path)
-        return
+        return None, None
 
-    information_handler.print_table_of_information(
+    info_path = information_handler.print_table_of_information(
         reference_image_path=image_path,
         template_image_path=resized_template_path,
         left=left_border,
@@ -70,3 +70,6 @@ def run(
 
     # Perform cleanup
     directory_handler.cleanup(crop_image_path)
+
+
+    return resized_template_path, info_path

@@ -129,30 +129,21 @@ def print_table_of_information(
     draw_information: bool = False,
 ):
     (
-        resize_width,
-        _,
         left_border,
         top_border,
         right_border,
         bottom_border,
-    ) = get_border_information(
-        reference_image_path=reference_image_path,
-        left=left,
-        top=top,
-        right=right,
-        bottom=bottom,
+        width_template,
+        height_template,
+        left_border_from_center,
+        left_border_from_right,
+        template_center_x,
+        template_center_y,
+        template_center_x_from_center,
+        template_center_x_from_right,
+    ) = fetch_image_manipulation_information(
+        reference_image_path, left, top, right, bottom
     )
-    width_template = right_border - left_border
-    height_template = bottom_border - top_border
-
-    left_border_from_center = left_border - math.floor(resize_width / 2)
-    left_border_from_right = left_border - resize_width
-
-    template_center_x = left_border + math.floor(width_template / 2)
-    template_center_y = top_border + math.floor(height_template / 2)
-
-    template_center_x_from_center = template_center_x - math.floor(resize_width / 2)
-    template_center_x_from_right = template_center_x - resize_width
 
     table_size = Table(show_header=False, show_lines=True)
     table_size.add_row("Width", f"{width_template}")
@@ -198,7 +189,7 @@ def print_table_of_information(
 
     console.print(table_location)
 
-    save_the_information(
+    return save_the_information(
         reference_image_path=reference_image_path,
         template_image_path=template_image_path,
         region_normal=region_normal,
@@ -233,6 +224,50 @@ def print_table_of_information(
             x=template_center_x,
             y=template_center_y,
         )
+
+
+def fetch_image_manipulation_information(
+    reference_image_path, left, top, right, bottom
+):
+    (
+        resize_width,
+        _,
+        left_border,
+        top_border,
+        right_border,
+        bottom_border,
+    ) = get_border_information(
+        reference_image_path=reference_image_path,
+        left=left,
+        top=top,
+        right=right,
+        bottom=bottom,
+    )
+    width_template = right_border - left_border
+    height_template = bottom_border - top_border
+
+    left_border_from_center = left_border - math.floor(resize_width / 2)
+    left_border_from_right = left_border - resize_width
+
+    template_center_x = left_border + math.floor(width_template / 2)
+    template_center_y = top_border + math.floor(height_template / 2)
+
+    template_center_x_from_center = template_center_x - math.floor(resize_width / 2)
+    template_center_x_from_right = template_center_x - resize_width
+    return (
+        left_border,
+        top_border,
+        right_border,
+        bottom_border,
+        width_template,
+        height_template,
+        left_border_from_center,
+        left_border_from_right,
+        template_center_x,
+        template_center_y,
+        template_center_x_from_center,
+        template_center_x_from_right,
+    )
 
 
 def save_the_information(
@@ -293,5 +328,7 @@ def save_the_information(
     try:
         with open(information_path, "w", encoding="utf-8") as file:
             toml.dump(information_dict, file)
+
+        return information_path
     except FileNotFoundError:
         console.print("[bold red]ERROR:[/bold red] File not found.")
