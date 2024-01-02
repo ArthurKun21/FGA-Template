@@ -1,5 +1,7 @@
+import textwrap
 from pathlib import Path
 
+import image_handler
 import PySimpleGUI as sg
 from gui_components import text_input_validation
 
@@ -26,10 +28,16 @@ def create_directory_column():
 
 def load_images_from_directory(dir_path: Path):
     return [
-        f"{x.name}"
+        f"{x}"
         for x in cwd.iterdir()
         if x.is_file() and x.suffix in image_extensions
     ]
+
+
+def load_image_size_information(window, image_path: Path):
+    image_width, image_height = image_handler.get_size(image_path)
+    window["ImageWidthCreate"].update(f"{image_width}")
+    window["ImageHeightCreate"].update(f"{image_height}")
 
 
 def load_directory_images_column():
@@ -51,16 +59,26 @@ def load_directory_images_column():
         sg.Col(
             [
                 [
+                    sg.Text("File name"),
+                ],
+                [
+                    sg.Text(
+                        "",
+                        key="SelectedImageCreate",
+                        size=(20, None),
+                    ),
+                ],
+                [
                     sg.Text("Width"),
                 ],
                 [
-                    sg.Text("Image Width"),
+                    sg.Text("", key="ImageWidthCreate"),
                 ],
                 [
                     sg.Text("Height"),
                 ],
                 [
-                    sg.Text("Image Height"),
+                    sg.Text("", key="ImageHeightCreate"),
                 ],
             ],
             justification="center",
@@ -223,7 +241,17 @@ def template_create_events_handler(window, event, values):
                 no_titlebar=True,
             )
         else:
-            print(path)
             items = load_images_from_directory(path)
             print(items)
             window["ImageCreateListbox"].update(values=items)
+
+    if event == "ImageCreateListbox":
+        selected_image_name = values["ImageCreateListbox"][0]
+        path = Path(selected_image_name)
+        if path.exists():
+            selected_image_text = textwrap.fill(f"{path.name}", 20)
+            window["SelectedImageCreate"].update(selected_image_text)
+        load_image_size_information(
+            window=window,
+            image_path=selected_image_name,
+        )
