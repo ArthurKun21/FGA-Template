@@ -12,8 +12,8 @@ console = Console()
 
 class MeasurementType(StrEnum):
     NORMAL = auto()
-    FROM_CENTER = auto()
-    FROM_RIGHT = auto()
+    CENTER = auto()
+    RIGHT = auto()
 
 
 height_reference = 1_440
