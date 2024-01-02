@@ -1,22 +1,20 @@
+import os
 import textwrap
 from pathlib import Path
 
 import information_handler
 import PySimpleGUI as sg
+import reverse
 from gui_components import (
     create_directory_column,
     create_information_layout,
+    create_operations_layout,
     load_directory_images_column,
     load_image_size_information,
+    load_image_window,
     load_images_from_directory,
     text_input_validation,
-    create_operations_layout,
-    load_image_window,
 )
-import os
-
-import reverse
-
 from rich.console import Console
 
 console = Console()
@@ -28,6 +26,7 @@ def reverse_values_column():
             [
                 sg.Text(
                     "Left",
+                    tooltip="Left value of the template",
                 ),
                 sg.Push(),
                 text_input_validation(
@@ -38,7 +37,10 @@ def reverse_values_column():
                     justification="center",
                 ),
                 sg.Push(),
-                sg.Text("Width"),
+                sg.Text(
+                    "Width",
+                    tooltip="Width value of the template",
+                ),
                 sg.Push(),
                 text_input_validation(
                     inputKey="WidthReverse",
@@ -49,7 +51,10 @@ def reverse_values_column():
                 ),
             ],
             [
-                sg.Text("Top"),
+                sg.Text(
+                    "Top",
+                    tooltip="Top value of the template",
+                ),
                 text_input_validation(
                     inputKey="TopReverse",
                     default_text="0",
@@ -57,7 +62,10 @@ def reverse_values_column():
                     size=(25, 1),
                     justification="center",
                 ),
-                sg.Text("Height"),
+                sg.Text(
+                    "Height",
+                    tooltip="Height value of the template",
+                ),
                 sg.Push(),
                 text_input_validation(
                     inputKey="HeightReverse",
@@ -116,8 +124,12 @@ def show_template_reverse_calculations(window, values):
                 width_template,
                 height_template,
             ) = information_handler.fetch_image_manipulation_information_reverse(
-                path, left_input, top_input, width=width_input, height=height_input,
-                selected_measurement_type=selected_operation
+                path,
+                left_input,
+                top_input,
+                width=width_input,
+                height=height_input,
+                selected_measurement_type=selected_operation,
             )
             window["LeftBorderReverseInformation"].update(f"{left_border}")
             window["TopBorderReverseInformation"].update(f"{top_border}")
