@@ -1,9 +1,31 @@
+from pathlib import Path
+
 import PySimpleGUI as sg
 from gui_components import text_input_validation
 
+cwd = Path(__file__).cwd()
 
-def template_create_layout():
-    add_column = sg.Col(
+
+
+def create_directory_column():
+    directory_column = sg.Col(
+        [
+            [
+                sg.Text("Folder"),
+                sg.Push(),
+                sg.Input(key="FileCreate", enable_events=True),
+                sg.FolderBrowse(key="FolderBrowseCreate", enable_events=True),
+            ],
+        ],
+        key="Add Column",
+        expand_x=True,
+        expand_y=True,
+    )
+    return directory_column
+
+
+def create_values_column():
+    left_top_column = sg.Col(
         [
             [
                 sg.Text(
@@ -13,40 +35,68 @@ def template_create_layout():
                 text_input_validation(
                     inputKey="LeftCreate",
                     default_text="0",
+                    expand_x=False,
+                    size=(25, 1),
+                    justification="center"
                 ),
-            ],
-            [
-                sg.Text("Top"),
                 sg.Push(),
-                text_input_validation(
-                    inputKey="TopCreate",
-                    default_text="0",
-                ),
-            ],
-            [
                 sg.Text("Right"),
                 sg.Push(),
                 text_input_validation(
                     inputKey="RightCreate",
                     default_text="0",
+                    expand_x=False,
+                    size=(25, 1),
+                    justification="center"
                 ),
             ],
             [
+                sg.Text("Top"),
+                text_input_validation(
+                    inputKey="TopCreate",
+                    default_text="0",
+                    expand_x=False,
+                    size=(25, 1),
+                    justification="center"
+                ),
                 sg.Text("Bottom"),
                 sg.Push(),
                 text_input_validation(
                     inputKey="BottomCreate",
                     default_text="0",
+                    expand_x=False,
+                    size=(25, 1),
+                    justification="center"
                 ),
             ],
-        ],
-        key="Add Column",
-        expand_x=True,
-        expand_y=True,
+        ]
     )
+    return left_top_column
+
+
+def template_create_layout():
     layout = [
-        [sg.Frame("Values", [[add_column]])],
-        [sg.Button("Submit", key="ButtonSubmitCreate", enable_events=True)],
+        [
+            sg.Frame(
+                "File",
+                [
+                    [create_directory_column()],
+                ],
+                expand_x=True,
+            )
+        ],
+        [
+            sg.Frame(
+                "Values",
+                [
+                    [create_values_column()],
+                ],
+                expand_x=True,
+            )
+        ],
+        [
+            sg.Button("Submit", key="ButtonSubmitCreate", enable_events=True),
+        ],
     ]
     return layout
 
@@ -77,4 +127,31 @@ def template_create_events_handler(window, event, values):
                 "",
             )
         except ValueError:
-            window["LeftCreateValidation"].update("Invalid value",text_color="red")
+            window["LeftCreateValidation"].update("Invalid value", text_color="red")
+
+    if event == "TopCreate":
+        try:
+            int(values["TopCreate"])
+            window["TopCreateValidation"].update(
+                "",
+            )
+        except ValueError:
+            window["TopCreateValidation"].update("Invalid value", text_color="red")
+
+    if event == "BottomCreate":
+        try:
+            int(values["BottomCreate"])
+            window["BottomCreateValidation"].update(
+                "",
+            )
+        except ValueError:
+            window["BottomCreateValidation"].update("Invalid value", text_color="red")
+
+    if event == "RightCreate":
+        try:
+            int(values["RightCreate"])
+            window["RightCreateValidation"].update(
+                "",
+            )
+        except ValueError:
+            window["RightCreateValidation"].update("Invalid value", text_color="red")
