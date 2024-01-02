@@ -47,14 +47,22 @@ def resize_template_to_reference(
                 (width_original / height_original) * height_original_resize
             )
 
-            template_resize_height = (
-                (height_original * height_original_resize) / width_original
-            ) / 2
-            template_resize_width = (
-                (width_original * width_original_resize) / height_original
-            ) / 2
 
             with Image.open(template_path) as template:
+                template_width, template_height = template.size
+
+                # Fetch the size of the template and then
+                # resize it to 1440p
+                # afterwards, divided by 2 because of FGA
+                # needs 720p for Image matching
+                template_resize_height = (
+                    (template_height * height_original_resize) / height_original
+                ) / 2
+                template_resize_width = (
+                    (template_width * width_original_resize) / width_original
+                ) / 2
+
+
                 template_img = template.resize(
                     (int(template_resize_width), int(template_resize_height)),
                     Image.Resampling.LANCZOS,
