@@ -2,9 +2,9 @@ from pathlib import Path
 
 import PySimpleGUI as sg
 from gui_components import text_input_validation
-from numpy import size
 
 cwd = Path(__file__).cwd()
+image_extensions = [".png", ".jpg"]
 
 
 def create_directory_column():
@@ -22,6 +22,49 @@ def create_directory_column():
         expand_y=True,
     )
     return directory_column
+
+
+def load_images_from_directory(dir_path: Path):
+    return [
+        f"{x.name}"
+        for x in cwd.iterdir()
+        if x.is_file() and x.suffix in image_extensions
+    ]
+
+
+def load_directory_images_column():
+    images_column = sg.Col(
+        [
+            [
+                sg.Listbox(
+                    values=load_images_from_directory(dir_path=cwd),
+                    size=(40, 20),
+                    key="ImageCreateListbox",
+                    enable_events=True,
+                ),
+                sg.Col(
+                    [
+                        [
+                            sg.Text("Width"),
+                        ],
+                        [
+                            sg.Text("Image Width"),
+                        ],
+                        [
+                            sg.Text("Height"),
+                        ],
+                        [
+                            sg.Text("Image Height"),
+                        ],
+                    ],
+                    justification="center",
+                ),
+            ]
+        ],
+        expand_x=True,
+        justification="left",
+    )
+    return images_column
 
 
 def create_values_column():
@@ -83,6 +126,16 @@ def template_create_layout():
                     [create_directory_column()],
                 ],
                 expand_x=True,
+            )
+        ],
+        [
+            sg.Frame(
+                "Images",
+                [
+                    [load_directory_images_column()],
+                ],
+                expand_x=True,
+                size=(720, 250),
             )
         ],
         [
@@ -167,4 +220,7 @@ def template_create_events_handler(window, event, values):
                 no_titlebar=True,
             )
         else:
-            cwd = path
+            print(path)
+            items = load_images_from_directory(path)
+            print(items)
+            window["ImageCreateListbox"].update(values=items)
