@@ -275,11 +275,12 @@ def template_create_events_handler(window, event, values):
         if path.exists():
             selected_image_text = textwrap.fill(f"{path.name}", 20)
             window["SelectedImageCreate"].update(selected_image_text)
-        load_image_size_information(
-            window=window,
-            image_path=selected_image_name,
-            function="Create"
-        )
+            load_image_size_information(
+                window=window,
+                image_path=selected_image_name,
+                function="Create"
+            )
+            show_template_create_calculations(window, values)
     if event == "LoadCreate":
         path = Path(values["FolderCreate"])
         if not path.exists():
