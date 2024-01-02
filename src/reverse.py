@@ -12,23 +12,28 @@ console = Console()
 
 def run(
     image_path: Path,
+    extra: str,
     left: Optional[int] = None,
     top: Optional[int] = None,
-    right: Optional[int] = None,
-    bottom: Optional[int] = None,
+    height: Optional[int] = None,
+    width: Optional[int] = None,
     **kwargs,
 ):
     console.print(f"Creating template from image: [blue]{image_path}[/blue]")
     tmp_folder = directory_handler.create_tmp_folder(
         image=image_path, function="reverse"
     )
+    if extra in border_handler.MeasurementType.__members__:  # type: ignore
+        measurement_type = border_handler.MeasurementType[extra]
+    else:
+        measurement_type = border_handler.MeasurementType.NORMAL
 
-    left_border, top_border, right_border, bottom_border = border_handler.get_border(
-        image_path=image_path,
+    left_border, top_border, right_border, bottom_border = border_handler.get_border_from_resize(
         left=left,
         top=top,
-        right=right,
-        bottom=bottom,
+        template_height=height,
+        template_width=width,
+        measurement_type=measurement_type,
     )
 
     (

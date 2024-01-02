@@ -189,7 +189,7 @@ def print_table_of_information(
 
     console.print(table_location)
 
-    return save_the_information(
+    information_path = save_the_information(
         reference_image_path=reference_image_path,
         template_image_path=template_image_path,
         region_normal=region_normal,
@@ -224,6 +224,8 @@ def print_table_of_information(
             x=template_center_x,
             y=template_center_y,
         )
+
+    return information_path
 
 
 def fetch_image_manipulation_information(

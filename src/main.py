@@ -121,6 +121,13 @@ def get_image() -> Optional[Path]:
     type=int,
     help="Width of the template",
 )
+@click.option(
+    "--extra",
+    required=False,
+    default=None,
+    type=str,
+    help="Extra Information",
+)
 def main(
     task: Optional[str],
     image: Optional[Path],
@@ -131,6 +138,7 @@ def main(
     bottom: Optional[int],
     height: Optional[int],
     width: Optional[int],
+    extra: Optional[str] = "center",
 ):
     console.print(f"Current Working Directory:\t[yellow]{cwd}")
 
@@ -175,6 +183,7 @@ def main(
             bottom=bottom,
             height=height,
             width=width,
+            extra=extra
         )
 
 
