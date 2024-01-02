@@ -356,7 +356,6 @@ def template_create_events_handler(window, event, values):
             window["RightCreateValidation"].update("Invalid value", text_color="red")
 
     if event == "FolderCreate":
-        console.print(f"Loading images from {values['FolderCreate']}")
         path = Path(f"{values["FolderCreate"]}")
         if not path.exists():
             sg.popup(
@@ -368,7 +367,6 @@ def template_create_events_handler(window, event, values):
             )
         else:
             items = load_images_from_directory(path)
-            console.print(f"Loading images from {items}")
             window["ImageCreateListbox"].update(values=items)
 
     if event == "ImageCreateListbox":
@@ -393,5 +391,4 @@ def template_create_events_handler(window, event, values):
             )
         else:
             items = load_images_from_directory(path)
-            console.print(f"Loading images from {items}")
             window["ImageCreateListbox"].update(values=items)
