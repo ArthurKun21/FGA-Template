@@ -207,6 +207,20 @@ plugins = ["importlib-metadata"]
 windows-terminal = ["colorama (>=0.4.6)"]
 
 [[package]]
+name = "pysimpleguiwx"
+version = "0.17.2"
+description = "The Engineering Pre-Release WxPython version of PySimpleGUI. PySimpleGUI SDK Launched in 2018 Actively developed and supported. Super-simple to create custom GUI's.  Now supports tkinter, Qt, WxPython, and Remi"
+optional = false
+python-versions = "*"
+files = [
+    {file = "PySimpleGUIWx-0.17.2-py3-none-any.whl", hash = "sha256:393f0e69a33d0702c5f4f10c0576811d6b5194d3e5060c95aca4fc6eb8d5e645"},
+    {file = "PySimpleGUIWx-0.17.2.tar.gz", hash = "sha256:910d6c1a0e472b8cef02cb9200428d55d930129eb4685106b8df0345d284e9bd"},
+]
+
+[package.dependencies]
+WxPython = "*"
+
+[[package]]
 name = "rich"
 version = "13.7.0"
 description = "Render rich text, tables, progress bars, syntax highlighting, markdown and more to the terminal"
@@ -251,6 +265,17 @@ files = [
 ]
 
 [[package]]
+name = "six"
+version = "1.16.0"
+description = "Python 2 and 3 compatibility utilities"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
+files = [
+    {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
+    {file = "six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"},
+]
+
+[[package]]
 name = "toml"
 version = "0.10.2"
 description = "Python Library for Tom's Obvious, Minimal Language"
@@ -283,7 +308,36 @@ files = [
     {file = "types_toml-0.10.8.7-py3-none-any.whl", hash = "sha256:61951da6ad410794c97bec035d59376ce1cbf4453dc9b6f90477e81e4442d631"},
 ]
 
+[[package]]
+name = "wxpython"
+version = "4.2.1"
+description = "Cross platform GUI toolkit for Python, \"Phoenix\" version"
+optional = false
+python-versions = "*"
+files = [
+    {file = "wxPython-4.2.1-cp310-cp310-macosx_10_10_universal2.whl", hash = "sha256:3fd606d10db694c29f712f13dc3d3179d0204a71f6c1fbb5fcee859d03e9ff97"},
+    {file = "wxPython-4.2.1-cp310-cp310-win32.whl", hash = "sha256:5b233c39d7bfb53b9c4928ee7c86d626f1f7a716a6dfc3acc152bb437e658751"},
+    {file = "wxPython-4.2.1-cp310-cp310-win_amd64.whl", hash = "sha256:bb7988814e706eb00792589d606d317da5661dcffbb09263cd20da956c46bcbb"},
+    {file = "wxPython-4.2.1-cp311-cp311-macosx_10_10_universal2.whl", hash = "sha256:e87960d1963e291d4009c8547c85716b7d5325eb828cd183fdb28d441d6c3787"},
+    {file = "wxPython-4.2.1-cp311-cp311-win32.whl", hash = "sha256:a41f3e03c3bfbe80864d7456f5c1236991fa937eedb60b986bd67e1bb47b7c3d"},
+    {file = "wxPython-4.2.1-cp311-cp311-win_amd64.whl", hash = "sha256:3062b4d2f5d6dcf1d59983797fc067270a5ce829a918d52a516212e798f0c9ae"},
+    {file = "wxPython-4.2.1-cp312-cp312-macosx_10_10_universal2.whl", hash = "sha256:957a6e7cc68a8e4d7ca49c72a691b6efd5684040f4f03b112d0122e7ab470497"},
+    {file = "wxPython-4.2.1-cp312-cp312-win32.whl", hash = "sha256:8d846a785cd33c31e7eb42038eb159c88977d38208496b8322d14aef107f3eec"},
+    {file = "wxPython-4.2.1-cp312-cp312-win_amd64.whl", hash = "sha256:1ca327c877f276b33e2c4b6cb8417964305ee505e2509fb2000851d48b82328f"},
+    {file = "wxPython-4.2.1-cp38-cp38-macosx_11_0_universal2.whl", hash = "sha256:a7eefbc7fe7ac86479d814302711f8f118ba214229aa2a6d789fb888ee79abaa"},
+    {file = "wxPython-4.2.1-cp38-cp38-win32.whl", hash = "sha256:ff0423e84a5aaa203e7c1c3d36f8417c54cb4cd8849a43b3c917ac3bfafa4ad7"},
+    {file = "wxPython-4.2.1-cp38-cp38-win_amd64.whl", hash = "sha256:903f45131107802b38c0b5d0e964a2ce0295b67e8c3d7659821ac5b26a35658b"},
+    {file = "wxPython-4.2.1-cp39-cp39-macosx_10_10_universal2.whl", hash = "sha256:a15b76dad81f9bd6ceadf00fbede9aff9e09859a9aa698c53e8bd56b95d2effc"},
+    {file = "wxPython-4.2.1-cp39-cp39-win32.whl", hash = "sha256:c4db6d7f054d76cb1532dbd5da81b87b7a90dc9fdf18a3540063b2f8f5f3e663"},
+    {file = "wxPython-4.2.1-cp39-cp39-win_amd64.whl", hash = "sha256:0595fdd133a552a232a99759b87891136a4500c806bbea68b888e7b6f2c9bbea"},
+    {file = "wxPython-4.2.1.tar.gz", hash = "sha256:e48de211a6606bf072ec3fa778771d6b746c00b7f4b970eb58728ddf56d13d5c"},
+]
+
+[package.dependencies]
+pillow = "*"
+six = "*"
+
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "398f42fae1a466fab35c612c856e23635728f92c30bb7b6e0b1ab4d74d5653ec"
+content-hash = "d170d0a818d9f0f4b34aa03f5ca577ba2e4e2c539528785c95c9cfac3554f62d"
