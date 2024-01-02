@@ -2,8 +2,12 @@ import os
 from pathlib import Path
 from typing import Optional
 
+import image_handler
 import PySimpleGUI as sg
 import toml
+
+cwd = Path(__file__).cwd()
+image_extensions = [".png", ".jpg"]
 
 
 def copy_to_clipboard(text: str):
@@ -39,12 +43,12 @@ def load_image_window(image_path: Path, info_path: Path):
                 disabled=True,
                 justification="center",
                 text_color=sg.theme_text_color(),
-                disabled_readonly_background_color=sg.theme_text_element_background_color()
+                disabled_readonly_background_color=sg.theme_text_element_background_color(),
             ),
             sg.Button(
                 "copy",
                 key="NormalRegionCopy",
-            )
+            ),
         ],
         [
             sg.Text("Center Region"),
@@ -55,12 +59,12 @@ def load_image_window(image_path: Path, info_path: Path):
                 disabled=True,
                 justification="center",
                 text_color=sg.theme_text_color(),
-                disabled_readonly_background_color=sg.theme_text_element_background_color()
+                disabled_readonly_background_color=sg.theme_text_element_background_color(),
             ),
             sg.Button(
                 "copy",
                 key="CenterRegionCopy",
-            )
+            ),
         ],
         [
             sg.Text("Right Region"),
@@ -71,12 +75,12 @@ def load_image_window(image_path: Path, info_path: Path):
                 disabled=True,
                 justification="center",
                 text_color=sg.theme_text_color(),
-                disabled_readonly_background_color=sg.theme_text_element_background_color()
+                disabled_readonly_background_color=sg.theme_text_element_background_color(),
             ),
             sg.Button(
                 "copy",
                 key="RightRegionCopy",
-            )
+            ),
         ],
         [
             sg.Text("Normal Location"),
@@ -87,12 +91,12 @@ def load_image_window(image_path: Path, info_path: Path):
                 key="NormalLocation",
                 justification="center",
                 text_color=sg.theme_text_color(),
-                disabled_readonly_background_color=sg.theme_text_element_background_color()
+                disabled_readonly_background_color=sg.theme_text_element_background_color(),
             ),
             sg.Button(
                 "copy",
                 key="NormalLocationCopy",
-            )
+            ),
         ],
         [
             sg.Text("Center Location"),
@@ -103,12 +107,12 @@ def load_image_window(image_path: Path, info_path: Path):
                 disabled=True,
                 justification="center",
                 text_color=sg.theme_text_color(),
-                disabled_readonly_background_color=sg.theme_text_element_background_color()
+                disabled_readonly_background_color=sg.theme_text_element_background_color(),
             ),
             sg.Button(
                 "copy",
                 key="CenterLocationCopy",
-            )
+            ),
         ],
         [
             sg.Text("Right Location"),
@@ -119,12 +123,12 @@ def load_image_window(image_path: Path, info_path: Path):
                 disabled=True,
                 justification="center",
                 text_color=sg.theme_text_color(),
-                disabled_readonly_background_color=sg.theme_text_element_background_color()
+                disabled_readonly_background_color=sg.theme_text_element_background_color(),
             ),
             sg.Button(
                 "copy",
                 key="RightLocationCopy",
-            )
+            ),
         ],
     ]
     window = sg.Window(f"{image_path.name}", layout, size=(800, 800))
@@ -177,3 +181,139 @@ def text_input_validation(
         ],
         element_justification="centered",
     )
+
+
+def load_images_from_directory(dir_path: Path):
+    return [
+        f"{x}"
+        for x in dir_path.iterdir()
+        if x.is_file() and x.suffix in image_extensions
+    ]
+
+
+def load_image_size_information(window, image_path: Path, function: str):
+    image_width, image_height = image_handler.get_size(image_path)
+    window[f"ImageWidth{function}"].update(f"{image_width}")
+    window[f"ImageHeight{function}"].update(f"{image_height}")
+
+
+def create_operations_layout(
+    function: str,
+):
+    active = f"NORMAL{function}"
+    operations = [
+        "NORMAL",
+        "CENTER",
+        "RIGHT",
+    ]
+    selected_color = ("red", "white")
+    layout = [
+        [
+            sg.Button(
+                name,
+                key=f"{name}{function}",
+                button_color=selected_color
+                if f"{name}{function}" == active
+                else sg.theme_button_color(),
+            )
+            for name in operations
+        ]
+    ]
+    return layout
+
+
+def create_information_layout(function: str):
+    layout = [
+        [
+            sg.Text("Left Border"),
+            sg.Push(),
+            sg.Text("", key=f"LeftBorder{function}Information"),
+            sg.Push(),
+            sg.Text("Top Border"),
+            sg.Push(),
+            sg.Text("", key=f"TopBorder{function}Information"),
+        ],
+        [
+            sg.Text("Right Border"),
+            sg.Push(),
+            sg.Text("", key=f"RightBorder{function}Information"),
+            sg.Push(),
+            sg.Text("Bottom Border"),
+            sg.Push(),
+            sg.Text("", key=f"BottomBorder{function}Information"),
+        ],
+        [
+            sg.Text("Template Width"),
+            sg.Push(),
+            sg.Text("", key=f"Width{function}Information"),
+            sg.Push(),
+            sg.Text("Template Height"),
+            sg.Push(),
+            sg.Text("", key=f"Height{function}Information"),
+        ],
+    ]
+    return layout
+
+
+def load_directory_images_column(function: str):
+    images_column = [
+        sg.Col(
+            [
+                [
+                    sg.Listbox(
+                        values=load_images_from_directory(cwd),
+                        size=(40, 20),
+                        key=f"Image{function}Listbox",
+                        enable_events=True,
+                    ),
+                ]
+            ],
+            expand_x=True,
+            justification="left",
+        ),
+        sg.Col(
+            [
+                [
+                    sg.Text("File name"),
+                ],
+                [
+                    sg.Text(
+                        "",
+                        key=f"SelectedImage{function}",
+                        size=(20, None),
+                    ),
+                ],
+                [
+                    sg.Text("Width"),
+                ],
+                [
+                    sg.Text("", key=f"ImageWidth{function}"),
+                ],
+                [
+                    sg.Text("Height"),
+                ],
+                [
+                    sg.Text("", key=f"ImageHeight{function}"),
+                ],
+            ],
+            justification="center",
+            expand_x=True,
+        ),
+    ]
+    return images_column
+
+
+def create_directory_column(function: str):
+    directory_column = sg.Col(
+        [
+            [
+                sg.Text("Folder"),
+                sg.Input(f"{cwd}", key=f"Folder{function}", enable_events=True),
+                sg.FolderBrowse(key=f"FolderBrowse{function}", enable_events=True),
+                sg.Button("Load", key=f"Load{function}", enable_events=True),
+            ],
+        ],
+        expand_x=True,
+        expand_y=True,
+    )
+    return directory_column

@@ -33,7 +33,16 @@ def get_border_from_resize(
         and template_width is not None
         and template_height is not None
     ):
-        return left, top, template_width + left, template_height + top
+        match measurement_type:
+            case MeasurementType.NORMAL:
+                left = left
+            case MeasurementType.CENTER:
+                left = math.floor(width_reference / 2) + left
+            case MeasurementType.RIGHT:
+                left = width_reference + left
+            case _:
+                left = left
+        return left, top, left + template_width, top+ template_height
 
     left_input = left
     top_input = top
@@ -44,11 +53,11 @@ def get_border_from_resize(
         case MeasurementType.NORMAL:
             width_int_range_hint = f"0 ~ {width_reference}"
             width_int_range = range(0, width_reference)
-        case MeasurementType.FROM_CENTER:
-            half_size = math.floor(width_reference /2)
+        case MeasurementType.CENTER:
+            half_size = math.floor(width_reference / 2)
             width_int_range_hint = f"{-half_size} ~ {half_size}"
             width_int_range = range(-half_size, half_size)
-        case MeasurementType.FROM_RIGHT:
+        case MeasurementType.RIGHT:
             width_int_range_hint = f"0 ~ {width_reference}"
             width_int_range = range(-width_reference, 0)
 
@@ -83,20 +92,14 @@ def get_border_from_resize(
     match measurement_type:
         case MeasurementType.NORMAL:
             left_input = left_input
-        case MeasurementType.FROM_CENTER:
+        case MeasurementType.CENTER:
             left_input = math.floor(width_reference / 2) + left_input
-        case MeasurementType.FROM_RIGHT:
+        case MeasurementType.RIGHT:
             left_input = width_reference + left_input
         case _:
             left_input = left_input
 
-    right_input = left_input + width_input
-    bottom_input = top_input + height_input
-
-
-    return left_input, top_input, right_input, bottom_input
-
-
+    return left_input, top_input, left_input + width_input, top_input + height_input
 
 
 def get_border(

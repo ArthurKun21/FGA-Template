@@ -28,7 +28,12 @@ def run(
     else:
         measurement_type = border_handler.MeasurementType.NORMAL
 
-    left_border, top_border, right_border, bottom_border = border_handler.get_border_from_resize(
+    (
+        left_border,
+        top_border,
+        right_border,
+        bottom_border,
+    ) = border_handler.get_border_from_resize(
         left=left,
         top=top,
         template_height=height,
@@ -76,7 +81,7 @@ def run(
         directory_handler.cleanup(tmp_folder, crop_image_path)
         return
 
-    information_handler.print_table_of_information(
+    info_path = information_handler.print_table_of_information(
         reference_image_path=image_path,
         template_image_path=resized_template_path,
         left=orig_left,
@@ -88,3 +93,5 @@ def run(
 
     # Perform cleanup
     directory_handler.cleanup(crop_image_path)
+
+    return resized_template_path, info_path
