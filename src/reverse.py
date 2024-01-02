@@ -14,8 +14,8 @@ def run(
     image_path: Path,
     left: Optional[int] = None,
     top: Optional[int] = None,
-    right: Optional[int] = None,
-    bottom: Optional[int] = None,
+    height: Optional[int] = None,
+    width: Optional[int] = None,
     **kwargs,
 ):
     console.print(f"Creating template from image: [blue]{image_path}[/blue]")
@@ -23,12 +23,12 @@ def run(
         image=image_path, function="reverse"
     )
 
-    left_border, top_border, right_border, bottom_border = border_handler.get_border(
+    left_border, top_border, right_border, bottom_border = border_handler.get_border_from_resize(
         image_path=image_path,
         left=left,
         top=top,
-        right=right,
-        bottom=bottom,
+        template_height=height,
+        template_width=width,
     )
 
     (

@@ -27,7 +27,7 @@ def get_border_from_resize(
     template_width: Optional[int] = None,
     template_height: Optional[int] = None,
     measurement_type: MeasurementType = MeasurementType.NORMAL,
-):
+) -> tuple[int, int, int, int]:
     if (
         left is not None
         and top is not None
@@ -69,9 +69,9 @@ def get_border_from_resize(
 
     while width_input is None:
         width_input = IntPrompt.ask(
-            prompt=f"How many pixels is the width of the template? [red]( {width_int_range_hint} )[/red]",
+            prompt=f"How many pixels is the width of the template? [red]( 0 ~ {width_reference} )[/red]",
             show_choices=False,
-            choices=[f"{x}" for x in width_int_range],
+            choices=[f"{x}" for x in range(1, width_reference)],
         )
 
     while height_input is None:
@@ -81,6 +81,26 @@ def get_border_from_resize(
             choices=[f"{x}" for x in range(1, height_reference)],
         )
 
+    match measurement_type:
+        case MeasurementType.NORMAL:
+            left_input = left_input
+        case MeasurementType.FROM_CENTER:
+            left_input = math.floor(width_reference / 2) + left_input
+        case MeasurementType.FROM_RIGHT:
+            left_input = width_reference + left_input
+
+    with Image.open(image_path) as img:
+        width, height = img.size
+
+    right_input = left_input + width_input
+    bottom_input = top_input + height_input
+
+    left = math.floor((left_input * width) / width_reference)
+    top = math.floor((top_input * height) / height_reference)
+    right = math.floor((right_input * width) / width_reference)
+    bottom = math.floor((bottom_input * height) / height_reference)
+
+    return left, top, right, bottom
 
 
 
