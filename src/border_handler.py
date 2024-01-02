@@ -21,7 +21,6 @@ width_reference = 2_560
 
 
 def get_border_from_resize(
-    image_path: Path,
     left: Optional[int] = None,
     top: Optional[int] = None,
     template_width: Optional[int] = None,
@@ -34,7 +33,7 @@ def get_border_from_resize(
         and template_width is not None
         and template_height is not None
     ):
-        return left, top, template_width, template_height
+        return left, top, template_width + left, template_height + top
 
     left_input = left
     top_input = top
@@ -88,19 +87,14 @@ def get_border_from_resize(
             left_input = math.floor(width_reference / 2) + left_input
         case MeasurementType.FROM_RIGHT:
             left_input = width_reference + left_input
-
-    with Image.open(image_path) as img:
-        width, height = img.size
+        case _:
+            left_input = left_input
 
     right_input = left_input + width_input
     bottom_input = top_input + height_input
 
-    left = math.floor((left_input * width) / width_reference)
-    top = math.floor((top_input * height) / height_reference)
-    right = math.floor((right_input * width) / width_reference)
-    bottom = math.floor((bottom_input * height) / height_reference)
 
-    return left, top, right, bottom
+    return left_input, top_input, right_input, bottom_input
 
 
 
