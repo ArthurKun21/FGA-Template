@@ -4,6 +4,9 @@ from pathlib import Path
 import image_handler
 import PySimpleGUI as sg
 from gui_components import text_input_validation
+from rich.console import Console
+
+console = Console()
 
 cwd = Path(__file__).cwd()
 image_extensions = [".png", ".jpg"]
@@ -14,9 +17,9 @@ def create_directory_column():
         [
             [
                 sg.Text("Folder"),
-                sg.Push(),
                 sg.Input(f"{cwd}", key="FolderCreate", enable_events=True),
                 sg.FolderBrowse(key="FolderBrowseCreate", enable_events=True),
+                sg.Button("Load", key="LoadCreate", enable_events=True),
             ],
         ],
         key="Add Column",
@@ -29,7 +32,7 @@ def create_directory_column():
 def load_images_from_directory(dir_path: Path):
     return [
         f"{x}"
-        for x in cwd.iterdir()
+        for x in dir_path.iterdir()
         if x.is_file() and x.suffix in image_extensions
     ]
 
@@ -46,7 +49,7 @@ def load_directory_images_column():
             [
                 [
                     sg.Listbox(
-                        values=load_images_from_directory(dir_path=cwd),
+                        values=load_images_from_directory(cwd),
                         size=(40, 20),
                         key="ImageCreateListbox",
                         enable_events=True,
@@ -231,7 +234,8 @@ def template_create_events_handler(window, event, values):
             window["RightCreateValidation"].update("Invalid value", text_color="red")
 
     if event == "FolderCreate":
-        path = Path(values["FolderCreate"])
+        console.print(f"Loading images from {values['FolderCreate']}")
+        path = Path(f"{values["FolderCreate"]}")
         if not path.exists():
             sg.popup(
                 f"Invalid Path {path}",
@@ -242,7 +246,7 @@ def template_create_events_handler(window, event, values):
             )
         else:
             items = load_images_from_directory(path)
-            print(items)
+            console.print(f"Loading images from {items}")
             window["ImageCreateListbox"].update(values=items)
 
     if event == "ImageCreateListbox":
@@ -255,3 +259,17 @@ def template_create_events_handler(window, event, values):
             window=window,
             image_path=selected_image_name,
         )
+    if event == "LoadCreate":
+        path = Path(values["FolderCreate"])
+        if not path.exists():
+            sg.popup(
+                f"Invalid Path {path}",
+                text_color="red",
+                auto_close_duration=2,
+                auto_close=True,
+                no_titlebar=True,
+            )
+        else:
+            items = load_images_from_directory(path)
+            console.print(f"Loading images from {items}")
+            window["ImageCreateListbox"].update(values=items)
