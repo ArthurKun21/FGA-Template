@@ -9,6 +9,8 @@ from PIL import Image
 from rich.console import Console
 from rich.table import Table
 
+from border_handler import MeasurementType
+
 console = Console()
 
 height_reference = 1_440
@@ -228,8 +230,38 @@ def print_table_of_information(
     return information_path
 
 
+def fetch_image_manipulation_information_reverse(
+    reference_image_path: Path,
+    left: int,
+    top: int,
+    width: int,
+    height: int,
+    selected_measurement_type: str,
+):
+    if selected_measurement_type in MeasurementType.__members__:  # type: ignore
+        measurement_type = MeasurementType[selected_measurement_type]
+    else:
+        measurement_type = MeasurementType.NORMAL
+
+    match measurement_type:
+        case MeasurementType.NORMAL:
+            left = left
+        case MeasurementType.CENTER:
+            left = math.floor(width_reference / 2) + left
+        case MeasurementType.RIGHT:
+            left = width_reference + left
+        case _:
+            left = left
+
+    return left, top, left + width, top + height, width, height
+
+
 def fetch_image_manipulation_information(
-    reference_image_path, left, top, right, bottom
+    reference_image_path:Path,
+    left: int,
+    top: int,
+    right: int,
+    bottom: int
 ):
     (
         resize_width,

@@ -11,7 +11,7 @@ from gui_components import (
     load_images_from_directory,
     text_input_validation,
     create_operations_layout,
-    load_image_window
+    load_image_window,
 )
 
 import reverse
@@ -19,6 +19,7 @@ import reverse
 from rich.console import Console
 
 console = Console()
+
 
 def reverse_values_column():
     values_column = sg.Col(
@@ -69,17 +70,39 @@ def reverse_values_column():
     )
     return values_column
 
-def show_template_create_calculations(window, values):
+
+def show_template_reverse_calculations(window, values):
     try:
         left_input = int(values["LeftReverse"])
         top_input = int(values["TopReverse"])
-        right_input = int(values["RightReverse"])
-        bottom_input = int(values["BottomReverse"])
+        width_input = int(values["WidthReverse"])
+        height_input = int(values["HeightReverse"])
 
-        if right_input < left_input or right_input == left_input:
+        if (left_input + width_input) < left_input or (
+            left_input + width_input
+        ) == left_input:
             raise ValueError("Right value is less than or equal to left value")
-        if bottom_input < top_input or bottom_input == top_input:
+        if (top_input + height_input) < top_input or (
+            top_input + height_input
+        ) == top_input:
             raise ValueError("Bottom value is less than or equal to top value")
+
+        operations = [
+            "NORMALReverse",
+            "CENTERReverse",
+            "RIGHTReverse",
+        ]
+        selected_color = ("red", "white")
+
+        selected_operation = operations[0]
+        for operation in operations:
+            color = window.FindElement(operation).ButtonColor
+            console.print(
+                f"Operation: [blue]{operation}[/blue] Color: [blue]{color}[/blue]"
+            )
+
+            if color == selected_color:
+                selected_operation = operation.replace("Reverse", "")
 
         selected_image_name = values["ImageReverseListbox"][0]
         path = Path(selected_image_name)
@@ -91,21 +114,16 @@ def show_template_create_calculations(window, values):
                 bottom_border,
                 width_template,
                 height_template,
-                _,
-                _,
-                _,
-                _,
-                _,
-                _,
-            ) = information_handler.fetch_image_manipulation_information(
-                path, left_input, top_input, right_input, bottom_input
+            ) = information_handler.fetch_image_manipulation_information_reverse(
+                path, left_input, top_input, width=width_input, height=height_input,
+                selected_measurement_type=selected_operation
             )
-            window["LeftBorderInformation"].update(f"{left_border}")
-            window["TopBorderInformation"].update(f"{top_border}")
-            window["RightBorderInformation"].update(f"{right_border}")
-            window["BottomBorderInformation"].update(f"{bottom_border}")
-            window["WidthInformation"].update(f"{width_template}")
-            window["HeightInformation"].update(f"{height_template}")
+            window["LeftBorderReverseInformation"].update(f"{left_border}")
+            window["TopBorderReverseInformation"].update(f"{top_border}")
+            window["RightBorderReverseInformation"].update(f"{right_border}")
+            window["BottomBorderReverseInformation"].update(f"{bottom_border}")
+            window["WidthReverseInformation"].update(f"{width_template}")
+            window["HeightReverseInformation"].update(f"{height_template}")
     except ValueError:
         pass
     except FileNotFoundError:
@@ -181,9 +199,7 @@ def template_reverse_events_handler(window, event, values):
             selected_image_text = textwrap.fill(f"{path.name}", 20)
             window["SelectedImageReverse"].update(selected_image_text)
         load_image_size_information(
-            window=window,
-            image_path=selected_image_name,
-            function="Reverse"
+            window=window, image_path=selected_image_name, function="Reverse"
         )
     if event == "LoadReverse":
         path = Path(values["FolderReverse"])
@@ -218,9 +234,13 @@ def template_reverse_events_handler(window, event, values):
             width_input = int(values["WidthReverse"])
             height_input = int(values["HeightReverse"])
 
-            if (left_input + width_input) < left_input or (left_input + width_input) == left_input:
+            if (left_input + width_input) < left_input or (
+                left_input + width_input
+            ) == left_input:
                 raise ValueError("Right value is less than or equal to left value")
-            if (top_input + height_input) < top_input or (top_input + height_input) == top_input:
+            if (top_input + height_input) < top_input or (
+                top_input + height_input
+            ) == top_input:
                 raise ValueError("Bottom value is less than or equal to top value")
 
             selected_operation = operations[0]
@@ -273,13 +293,13 @@ def template_reverse_events_handler(window, event, values):
                 auto_close=True,
             )
 
-
     if event == "LeftReverse":
         try:
             int(values["LeftReverse"])
             window["LeftReverseValidation"].update(
                 "",
             )
+            show_template_reverse_calculations(window, values)
         except ValueError:
             window["LeftReverseValidation"].update("Invalid value", text_color="red")
 
@@ -289,6 +309,7 @@ def template_reverse_events_handler(window, event, values):
             window["WidthReverseValidation"].update(
                 "",
             )
+            show_template_reverse_calculations(window, values)
         except ValueError:
             window["WidthReverseValidation"].update("Invalid value", text_color="red")
 
@@ -298,6 +319,7 @@ def template_reverse_events_handler(window, event, values):
             window["TopReverseValidation"].update(
                 "",
             )
+            show_template_reverse_calculations(window, values)
         except ValueError:
             window["TopReverseValidation"].update("Invalid value", text_color="red")
 
@@ -307,5 +329,6 @@ def template_reverse_events_handler(window, event, values):
             window["HeightReverseValidation"].update(
                 "",
             )
+            show_template_reverse_calculations(window, values)
         except ValueError:
             window["HeightReverseValidation"].update("Invalid value", text_color="red")
