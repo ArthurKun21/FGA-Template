@@ -11,8 +11,14 @@ from gui_components import (
     load_images_from_directory,
     text_input_validation,
     create_operations_layout,
+    load_image_window
 )
 
+import reverse
+
+from rich.console import Console
+
+console = Console()
 
 def reverse_values_column():
     values_column = sg.Col(
@@ -206,7 +212,67 @@ def template_reverse_events_handler(window, event, values):
             items = load_images_from_directory(path)
             window["ImageReverseListbox"].update(values=items)
     if event == "ButtonSubmitReverse":
-        pass
+        try:
+            left_input = int(values["LeftReverse"])
+            top_input = int(values["TopReverse"])
+            width_input = int(values["WidthReverse"])
+            height_input = int(values["HeightReverse"])
+
+            if (left_input + width_input) < left_input or (left_input + width_input) == left_input:
+                raise ValueError("Right value is less than or equal to left value")
+            if (top_input + height_input) < top_input or (top_input + height_input) == top_input:
+                raise ValueError("Bottom value is less than or equal to top value")
+
+            selected_operation = operations[0]
+            for operation in operations:
+                color = window.FindElement(operation).ButtonColor
+                console.print(
+                    f"Operation: [blue]{operation}[/blue] Color: [blue]{color}[/blue]"
+                )
+
+                if color == selected_color:
+                    selected_operation = operation.replace("Reverse", "")
+
+            selected_image_name = values["ImageReverseListbox"][0]
+            path = Path(selected_image_name)
+            if path.exists():
+                template_path, info_path = reverse.run(
+                    image_path=path,
+                    left=left_input,
+                    top=top_input,
+                    width=width_input,
+                    height=height_input,
+                    extra=selected_operation,
+                )
+                if template_path is not None and info_path is not None:
+                    load_image_window(template_path, info_path)
+        except ValueError:
+            console.print_exception()
+            sg.popup(
+                "Value error/s",
+                text_color="red",
+                auto_close_duration=2,
+                auto_close=True,
+                no_titlebar=True,
+            )
+        except FileNotFoundError:
+            console.print_exception()
+            sg.popup(
+                "FileNotFoundError",
+                text_color="red",
+                auto_close_duration=2,
+                auto_close=True,
+                no_titlebar=True,
+            )
+        except IndexError:
+            console.print_exception()
+            sg.popup(
+                "No selected item",
+                text_color="red",
+                auto_close_duration=2,
+                auto_close=True,
+            )
+
 
     if event == "LeftReverse":
         try:
