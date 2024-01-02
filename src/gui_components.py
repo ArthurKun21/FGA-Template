@@ -28,7 +28,9 @@ def load_image_window(image_path: Path, info_path: Path):
 
     layout = [
         [
+            sg.Push(),
             sg.Image(filename=f"{image_path}"),
+            sg.Push(),
         ],
         [
             sg.Button("Load Directory", key="LoadDirectoryButton"),
@@ -131,7 +133,7 @@ def load_image_window(image_path: Path, info_path: Path):
             ),
         ],
     ]
-    window = sg.Window(f"{image_path.name}", layout, size=(800, 800))
+    window = sg.Window(f"{image_path.name}", layout, size=(800, 400))
     while True:
         event, _ = window.read()
         if event == sg.WIN_CLOSED:
