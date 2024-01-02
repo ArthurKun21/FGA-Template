@@ -13,6 +13,7 @@ from gui_components import (
     create_operations_layout,
     load_image_window,
 )
+import os
 
 import reverse
 
@@ -198,9 +199,15 @@ def template_reverse_events_handler(window, event, values):
         if path.exists():
             selected_image_text = textwrap.fill(f"{path.name}", 20)
             window["SelectedImageReverse"].update(selected_image_text)
-        load_image_size_information(
-            window=window, image_path=selected_image_name, function="Reverse"
-        )
+            load_image_size_information(
+                window=window, image_path=selected_image_name, function="Reverse"
+            )
+            window["OpenImageReverse"].update(visible=True)
+    if event == "OpenImageReverse":
+        selected_image_name = values["ImageReverseListbox"][0]
+        path = Path(selected_image_name)
+        if path.exists():
+            os.startfile(f"{path}")
     if event == "LoadReverse":
         path = Path(values["FolderReverse"])
         if not path.exists():

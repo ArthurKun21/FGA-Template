@@ -1,3 +1,4 @@
+import os
 import textwrap
 from pathlib import Path
 
@@ -280,6 +281,7 @@ def template_create_events_handler(window, event, values):
                 image_path=selected_image_name,
                 function="Create"
             )
+            window["OpenImageCreate"].update(visible=True)
             show_template_create_calculations(window, values)
     if event == "LoadCreate":
         path = Path(values["FolderCreate"])
@@ -294,3 +296,9 @@ def template_create_events_handler(window, event, values):
         else:
             items = load_images_from_directory(path)
             window["ImageCreateListbox"].update(values=items)
+
+    if event == "OpenImageCreate":
+        selected_image_name = values["ImageCreateListbox"][0]
+        path = Path(selected_image_name)
+        if path.exists():
+            os.startfile(f"{path}")

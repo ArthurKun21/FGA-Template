@@ -297,6 +297,14 @@ def load_directory_images_column(function: str):
                 [
                     sg.Text("", key=f"ImageHeight{function}"),
                 ],
+                [
+                    sg.Button(
+                        "Open Image",
+                        key=f"OpenImage{function}",
+                        enable_events=True,
+                        visible=False,
+                    ),
+                ],
             ],
             justification="center",
             expand_x=True,
