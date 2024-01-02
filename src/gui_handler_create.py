@@ -2,9 +2,9 @@ from pathlib import Path
 
 import PySimpleGUI as sg
 from gui_components import text_input_validation
+from numpy import size
 
 cwd = Path(__file__).cwd()
-
 
 
 def create_directory_column():
@@ -13,7 +13,7 @@ def create_directory_column():
             [
                 sg.Text("Folder"),
                 sg.Push(),
-                sg.Input(key="FileCreate", enable_events=True),
+                sg.Input(f"{cwd}", key="FolderCreate", enable_events=True),
                 sg.FolderBrowse(key="FolderBrowseCreate", enable_events=True),
             ],
         ],
@@ -37,7 +37,7 @@ def create_values_column():
                     default_text="0",
                     expand_x=False,
                     size=(25, 1),
-                    justification="center"
+                    justification="center",
                 ),
                 sg.Push(),
                 sg.Text("Right"),
@@ -47,7 +47,7 @@ def create_values_column():
                     default_text="0",
                     expand_x=False,
                     size=(25, 1),
-                    justification="center"
+                    justification="center",
                 ),
             ],
             [
@@ -57,7 +57,7 @@ def create_values_column():
                     default_text="0",
                     expand_x=False,
                     size=(25, 1),
-                    justification="center"
+                    justification="center",
                 ),
                 sg.Text("Bottom"),
                 sg.Push(),
@@ -66,7 +66,7 @@ def create_values_column():
                     default_text="0",
                     expand_x=False,
                     size=(25, 1),
-                    justification="center"
+                    justification="center",
                 ),
             ],
         ]
@@ -155,3 +155,16 @@ def template_create_events_handler(window, event, values):
             )
         except ValueError:
             window["RightCreateValidation"].update("Invalid value", text_color="red")
+
+    if event == "FolderCreate":
+        path = Path(values["FolderCreate"])
+        if not path.exists():
+            sg.popup(
+                f"Invalid Path {path}",
+                text_color="red",
+                auto_close_duration=2,
+                auto_close=True,
+                no_titlebar=True,
+            )
+        else:
+            cwd = path
