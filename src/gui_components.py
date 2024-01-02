@@ -196,9 +196,33 @@ def load_image_size_information(window, image_path: Path, function: str):
     window[f"ImageWidth{function}"].update(f"{image_width}")
     window[f"ImageHeight{function}"].update(f"{image_height}")
 
-def create_information_layout(
-        function: str
+
+def create_operations_layout(
+    function: str,
 ):
+    active = f"NORMAL{function}"
+    operations = [
+        "NORMAL",
+        "CENTER",
+        "RIGHT",
+    ]
+    selected_color = ("red", "white")
+    layout = [
+        [
+            sg.Button(
+                name,
+                key=f"{name}{function}",
+                button_color=selected_color
+                if f"{name}{function}" == active
+                else sg.theme_button_color(),
+            )
+            for name in operations
+        ]
+    ]
+    return layout
+
+
+def create_information_layout(function: str):
     layout = [
         [
             sg.Text("Left Border"),
@@ -230,9 +254,8 @@ def create_information_layout(
     ]
     return layout
 
-def load_directory_images_column(
-        function: str
-):
+
+def load_directory_images_column(function: str):
     images_column = [
         sg.Col(
             [
@@ -280,9 +303,7 @@ def load_directory_images_column(
     return images_column
 
 
-def create_directory_column(
-        function: str
-):
+def create_directory_column(function: str):
     directory_column = sg.Col(
         [
             [

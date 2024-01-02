@@ -1,12 +1,16 @@
-import PySimpleGUI as sg
-from pathlib import Path
 import textwrap
+from pathlib import Path
+
+import information_handler
+import PySimpleGUI as sg
 from gui_components import (
     create_directory_column,
+    create_information_layout,
     load_directory_images_column,
-    text_input_validation,
     load_image_size_information,
     load_images_from_directory,
+    text_input_validation,
+    create_operations_layout,
 )
 
 
@@ -59,6 +63,50 @@ def reverse_values_column():
     )
     return values_column
 
+def show_template_create_calculations(window, values):
+    try:
+        left_input = int(values["LeftReverse"])
+        top_input = int(values["TopReverse"])
+        right_input = int(values["RightReverse"])
+        bottom_input = int(values["BottomReverse"])
+
+        if right_input < left_input or right_input == left_input:
+            raise ValueError("Right value is less than or equal to left value")
+        if bottom_input < top_input or bottom_input == top_input:
+            raise ValueError("Bottom value is less than or equal to top value")
+
+        selected_image_name = values["ImageReverseListbox"][0]
+        path = Path(selected_image_name)
+        if path.exists():
+            (
+                left_border,
+                top_border,
+                right_border,
+                bottom_border,
+                width_template,
+                height_template,
+                _,
+                _,
+                _,
+                _,
+                _,
+                _,
+            ) = information_handler.fetch_image_manipulation_information(
+                path, left_input, top_input, right_input, bottom_input
+            )
+            window["LeftBorderInformation"].update(f"{left_border}")
+            window["TopBorderInformation"].update(f"{top_border}")
+            window["RightBorderInformation"].update(f"{right_border}")
+            window["BottomBorderInformation"].update(f"{bottom_border}")
+            window["WidthInformation"].update(f"{width_template}")
+            window["HeightInformation"].update(f"{height_template}")
+    except ValueError:
+        pass
+    except FileNotFoundError:
+        pass
+    except IndexError:
+        pass
+
 
 def template_reverse_layout():
     layout = [
@@ -93,12 +141,33 @@ def template_reverse_layout():
         [
             sg.Button("Submit", key="ButtonSubmitReverse", enable_events=True),
         ],
+        [
+            sg.Frame(
+                "Mode",
+                create_operations_layout(function="Reverse"),
+            )
+        ],
+        [
+            sg.Frame(
+                "Information",
+                create_information_layout(function="Reverse"),
+            )
+        ],
     ]
     return layout
 
 
 def template_reverse_events_handler(window, event, values):
-
+    operations = [
+        f"NORMALReverse",
+        f"CENTERReverse",
+        f"RIGHTReverse",
+    ]
+    selected_color = ("red", "white")
+    if event in operations:
+        for operation in operations:
+            window[operation].update(button_color=sg.theme_button_color())
+        window[event].update(button_color=selected_color)
     if event == "ImageReverseListbox":
         selected_image_name = values["ImageReverseListbox"][0]
         path = Path(selected_image_name)
