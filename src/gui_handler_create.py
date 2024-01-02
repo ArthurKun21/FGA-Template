@@ -11,6 +11,7 @@ from gui_components import (
     text_input_validation,
     load_image_size_information,
     load_directory_images_column,
+    create_information_layout
 )
 from rich.console import Console
 
@@ -109,41 +110,8 @@ def template_create_layout():
         [
             sg.Frame(
                 "Information",
-                create_information_layout(),
+                create_information_layout(function="Create"),
             )
-        ],
-    ]
-    return layout
-
-
-def create_information_layout():
-    layout = [
-        [
-            sg.Text("Left Border"),
-            sg.Push(),
-            sg.Text("", key="LeftBorderInformation"),
-            sg.Push(),
-            sg.Text("Top Border"),
-            sg.Push(),
-            sg.Text("", key="TopBorderInformation"),
-        ],
-        [
-            sg.Text("Right Border"),
-            sg.Push(),
-            sg.Text("", key="RightBorderInformation"),
-            sg.Push(),
-            sg.Text("Bottom Border"),
-            sg.Push(),
-            sg.Text("", key="BottomBorderInformation"),
-        ],
-        [
-            sg.Text("Template Width"),
-            sg.Push(),
-            sg.Text("", key="WidthInformation"),
-            sg.Push(),
-            sg.Text("Template Height"),
-            sg.Push(),
-            sg.Text("", key="HeightInformation"),
         ],
     ]
     return layout
@@ -180,12 +148,12 @@ def show_template_create_calculations(window, values):
             ) = information_handler.fetch_image_manipulation_information(
                 path, left_input, top_input, right_input, bottom_input
             )
-            window["LeftBorderInformation"].update(f"{left_border}")
-            window["TopBorderInformation"].update(f"{top_border}")
-            window["RightBorderInformation"].update(f"{right_border}")
-            window["BottomBorderInformation"].update(f"{bottom_border}")
-            window["WidthInformation"].update(f"{width_template}")
-            window["HeightInformation"].update(f"{height_template}")
+            window["LeftBorderCreateInformation"].update(f"{left_border}")
+            window["TopBorderCreateInformation"].update(f"{top_border}")
+            window["RightBorderCreateInformation"].update(f"{right_border}")
+            window["BottomBorderCreateInformation"].update(f"{bottom_border}")
+            window["WidthCreateInformation"].update(f"{width_template}")
+            window["HeightCreateInformation"].update(f"{height_template}")
     except ValueError:
         pass
     except FileNotFoundError:

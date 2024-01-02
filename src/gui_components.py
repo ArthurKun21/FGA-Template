@@ -196,6 +196,40 @@ def load_image_size_information(window, image_path: Path, function: str):
     window[f"ImageWidth{function}"].update(f"{image_width}")
     window[f"ImageHeight{function}"].update(f"{image_height}")
 
+def create_information_layout(
+        function: str
+):
+    layout = [
+        [
+            sg.Text("Left Border"),
+            sg.Push(),
+            sg.Text("", key=f"LeftBorder{function}Information"),
+            sg.Push(),
+            sg.Text("Top Border"),
+            sg.Push(),
+            sg.Text("", key=f"TopBorder{function}Information"),
+        ],
+        [
+            sg.Text("Right Border"),
+            sg.Push(),
+            sg.Text("", key=f"RightBorder{function}Information"),
+            sg.Push(),
+            sg.Text("Bottom Border"),
+            sg.Push(),
+            sg.Text("", key=f"BottomBorder{function}Information"),
+        ],
+        [
+            sg.Text("Template Width"),
+            sg.Push(),
+            sg.Text("", key=f"Width{function}Information"),
+            sg.Push(),
+            sg.Text("Template Height"),
+            sg.Push(),
+            sg.Text("", key=f"Height{function}Information"),
+        ],
+    ]
+    return layout
+
 def load_directory_images_column(
         function: str
 ):
