@@ -6,6 +6,8 @@ import PySimpleGUI as sg
 from gui_components import text_input_validation
 from rich.console import Console
 
+import create
+
 console = Console()
 
 cwd = Path(__file__).cwd()
@@ -185,10 +187,22 @@ def template_create_events_handler(window, event, values):
             top_input = int(values["TopCreate"])
             right_input = int(values["RightCreate"])
             bottom_input = int(values["BottomCreate"])
+
+            if right_input < left_input or right_input == left_input:
+                raise ValueError("Right value is less than or equal to left value")
+            if bottom_input < top_input or bottom_input == top_input:
+                raise ValueError("Bottom value is less than or equal to top value")
+
             selected_image_name = values["ImageCreateListbox"][0]
             path = Path(selected_image_name)
             if path.exists():
-                pass
+                create.run(
+                    image_path=path,
+                    left=left_input,
+                    top=top_input,
+                    right=right_input,
+                    bottom=bottom_input,
+                )
         except ValueError:
             console.print_exception()
             sg.popup(
