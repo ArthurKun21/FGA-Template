@@ -44,11 +44,11 @@ def get_border_from_resize(
         case MeasurementType.NORMAL:
             width_int_range_hint = f"0 ~ {width_reference}"
             width_int_range = range(0, width_reference)
-        case MeasurementType.FROM_CENTER:
+        case MeasurementType.CENTER:
             half_size = math.floor(width_reference /2)
             width_int_range_hint = f"{-half_size} ~ {half_size}"
             width_int_range = range(-half_size, half_size)
-        case MeasurementType.FROM_RIGHT:
+        case MeasurementType.RIGHT:
             width_int_range_hint = f"0 ~ {width_reference}"
             width_int_range = range(-width_reference, 0)
 
@@ -83,9 +83,9 @@ def get_border_from_resize(
     match measurement_type:
         case MeasurementType.NORMAL:
             left_input = left_input
-        case MeasurementType.FROM_CENTER:
+        case MeasurementType.CENTER:
             left_input = math.floor(width_reference / 2) + left_input
-        case MeasurementType.FROM_RIGHT:
+        case MeasurementType.RIGHT:
             left_input = width_reference + left_input
         case _:
             left_input = left_input
