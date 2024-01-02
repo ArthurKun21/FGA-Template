@@ -1,12 +1,11 @@
 import textwrap
 from pathlib import Path
 
+import create
 import image_handler
 import PySimpleGUI as sg
-from gui_components import text_input_validation
+from gui_components import load_image_window, text_input_validation
 from rich.console import Console
-
-import create
 
 console = Console()
 
@@ -161,7 +160,7 @@ def template_create_layout():
                     load_directory_images_column(),
                 ],
                 expand_x=True,
-                size=(720, 250),
+                size=(720, 350),
             )
         ],
         [
@@ -196,13 +195,15 @@ def template_create_events_handler(window, event, values):
             selected_image_name = values["ImageCreateListbox"][0]
             path = Path(selected_image_name)
             if path.exists():
-                create.run(
+                template_path, info_path = create.run(
                     image_path=path,
                     left=left_input,
                     top=top_input,
                     right=right_input,
                     bottom=bottom_input,
                 )
+                if template_path is not None and info_path is not None:
+                    load_image_window(template_path, info_path)
         except ValueError:
             console.print_exception()
             sg.popup(

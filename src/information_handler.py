@@ -198,7 +198,7 @@ def print_table_of_information(
 
     console.print(table_location)
 
-    save_the_information(
+    return save_the_information(
         reference_image_path=reference_image_path,
         template_image_path=template_image_path,
         region_normal=region_normal,
@@ -293,5 +293,7 @@ def save_the_information(
     try:
         with open(information_path, "w", encoding="utf-8") as file:
             toml.dump(information_dict, file)
+
+        return information_path
     except FileNotFoundError:
         console.print("[bold red]ERROR:[/bold red] File not found.")
