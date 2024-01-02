@@ -33,37 +33,40 @@ def load_images_from_directory(dir_path: Path):
 
 
 def load_directory_images_column():
-    images_column = sg.Col(
-        [
+    images_column = [
+        sg.Col(
             [
-                sg.Listbox(
-                    values=load_images_from_directory(dir_path=cwd),
-                    size=(40, 20),
-                    key="ImageCreateListbox",
-                    enable_events=True,
-                ),
-                sg.Col(
-                    [
-                        [
-                            sg.Text("Width"),
-                        ],
-                        [
-                            sg.Text("Image Width"),
-                        ],
-                        [
-                            sg.Text("Height"),
-                        ],
-                        [
-                            sg.Text("Image Height"),
-                        ],
-                    ],
-                    justification="center",
-                ),
-            ]
-        ],
-        expand_x=True,
-        justification="left",
-    )
+                [
+                    sg.Listbox(
+                        values=load_images_from_directory(dir_path=cwd),
+                        size=(40, 20),
+                        key="ImageCreateListbox",
+                        enable_events=True,
+                    ),
+                ]
+            ],
+            expand_x=True,
+            justification="left",
+        ),
+        sg.Col(
+            [
+                [
+                    sg.Text("Width"),
+                ],
+                [
+                    sg.Text("Image Width"),
+                ],
+                [
+                    sg.Text("Height"),
+                ],
+                [
+                    sg.Text("Image Height"),
+                ],
+            ],
+            justification="center",
+            expand_x=True,
+        ),
+    ]
     return images_column
 
 
@@ -132,7 +135,7 @@ def template_create_layout():
             sg.Frame(
                 "Images",
                 [
-                    [load_directory_images_column()],
+                    load_directory_images_column(),
                 ],
                 expand_x=True,
                 size=(720, 250),
