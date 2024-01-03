@@ -84,10 +84,10 @@ def run(
     info_path = information_handler.print_table_of_information_resize(
         reference_image_path=image_path,
         template_image_path=resized_template_path,
-        left=orig_left,
-        top=orig_top,
-        right=orig_right,
-        bottom=orig_bottom,
+        left_border=left_border,
+        top_border=top_border,
+        right_border=right_border,
+        bottom_border=bottom_border,
         draw_information=True,
     )
 

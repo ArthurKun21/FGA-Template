@@ -1,18 +1,17 @@
+import shutil
 from pathlib import Path
 from typing import Optional, Tuple
 
 import border_handler
+import cv2
 import directory_handler
 import image_handler
 import information_handler
-from rich.console import Console
-from rich.table import Table
-from rich.progress import Progress
-
-from PIL import Image
-import shutil
 import numpy as np
-import cv2
+from PIL import Image
+from rich.console import Console
+from rich.progress import Progress
+from rich.table import Table
 
 console = Console()
 
@@ -137,11 +136,6 @@ def run(
     right_border_highest = 0
     bottom_border_highest = 0
 
-    left_original_highest = 0
-    top_original_highest = 0
-    right_original_highest = 0
-    bottom_original_highest = 0
-
     tmp_matching_folder = tmp_folder / "matching"
     tmp_matching_folder.mkdir(exist_ok=True, parents=True)
 
@@ -199,18 +193,6 @@ def run(
                         top_border_highest = top_border + y
                         right_border_highest = right_border + x
                         bottom_border_highest = bottom_border + y
-
-                        if orig_left is not None:
-                            left_original_highest = orig_left
-
-                        if orig_top is not None:
-                            top_original_highest = orig_top
-
-                        if orig_right is not None:
-                            right_original_highest = orig_right
-
-                        if orig_bottom is not None:
-                            bottom_original_highest = orig_bottom
                 else:
                     progress.console.print(f"Score: [red]{score:.6f}[/red]\t")
                     based_image_path.unlink(missing_ok=True)
@@ -250,10 +232,10 @@ def run(
             info_path = information_handler.print_table_of_information_resize(
                 reference_image_path=image_path,
                 template_image_path=highest_image_score_path,
-                left=left_original_highest,
-                top=top_original_highest,
-                right=right_original_highest,
-                bottom=bottom_original_highest,
+                left_border=left_border_highest,
+                top_border=top_border_highest,
+                right_border=right_border_highest,
+                bottom_border=bottom_border_highest,
                 draw_information=True,
             )
     else:
