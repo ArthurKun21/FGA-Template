@@ -1,6 +1,5 @@
 import os
 from pathlib import Path
-from tkinter import Image
 from typing import Optional
 
 import image_handler
@@ -288,16 +287,27 @@ def load_directory_images_column(function: str):
                     ),
                 ],
                 [
-                    sg.Text("Width"),
-                ],
-                [
-                    sg.Text("", key=f"ImageWidth{function}"),
-                ],
-                [
-                    sg.Text("Height"),
-                ],
-                [
-                    sg.Text("", key=f"ImageHeight{function}"),
+                    sg.Col(
+                        [
+                            [
+                                sg.Text("Width"),
+                            ],
+                            [
+                                sg.Text("", key=f"ImageWidth{function}"),
+                            ],
+                        ]
+                    ),
+                    sg.Push(),
+                    sg.Col(
+                        [
+                            [
+                                sg.Text("Height"),
+                            ],
+                            [
+                                sg.Text("", key=f"ImageHeight{function}"),
+                            ],
+                        ]
+                    ),
                 ],
                 [
                     sg.Button(
@@ -332,7 +342,7 @@ def create_directory_column(function: str):
 
 
 def image_viewer_window(
-        image_path: Path,
+    image_path: Path,
 ):
     layout = [
         [
@@ -358,6 +368,5 @@ def image_viewer_window(
     crosshair_lines = []
     while True:
         event, values = window.read()
-
 
     window.close()
