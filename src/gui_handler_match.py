@@ -280,6 +280,12 @@ def template_match_events_handler(window, event, values):
                 )
                 if template_path is not None and info_path is not None:
                     load_image_window(template_path, info_path)
+                else:
+                    sg.popup(
+                        "No match found",
+                        text_color="red",
+                        no_titlebar=True,
+                    )
         except ValueError:
             console.print_exception()
             sg.popup(
