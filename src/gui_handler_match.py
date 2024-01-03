@@ -160,6 +160,7 @@ def template_match_events_handler(window, event, values):
         for operation in operations:
             window[operation].update(button_color=sg.theme_button_color())
         window[event].update(button_color=selected_color)
+        
     if event == "ImageMatchListbox":
         selected_image_name = values["ImageMatchListbox"][0]
         path = Path(selected_image_name)
@@ -170,11 +171,30 @@ def template_match_events_handler(window, event, values):
                 window=window, image_path=selected_image_name, function="Match"
             )
             window["OpenImageMatch"].update(visible=True)
+
+    if event == "ImageMatchTemplateListbox":
+        selected_image_name = values["ImageMatchTemplateListbox"][0]
+        path = Path(selected_image_name)
+        if path.exists():
+            selected_image_text = textwrap.fill(f"{path.name}", 20)
+            window["SelectedImageMatchTemplate"].update(selected_image_text)
+            load_image_size_information(
+                window=window, image_path=selected_image_name, function="MatchTemplate"
+            )
+            window["OpenImageMatchTemplate"].update(visible=True)
+
     if event == "OpenImageMatch":
         selected_image_name = values["ImageMatchListbox"][0]
         path = Path(selected_image_name)
         if path.exists():
             os.startfile(f"{path}")
+
+    if event == "OpenImageMatchTemplate":
+        selected_image_name = values["ImageMatchTemplateListbox"][0]
+        path = Path(selected_image_name)
+        if path.exists():
+            os.startfile(f"{path}")
+
     if event == "LoadMatch":
         path = Path(values["FolderMatch"])
         if not path.exists():
