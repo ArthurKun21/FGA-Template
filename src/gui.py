@@ -1,5 +1,6 @@
 from gui_handler_create import template_create_layout, template_create_events_handler
 from gui_handler_reverse import template_reverse_layout, template_reverse_events_handler
+from gui_handler_match import template_match_layout, template_match_events_handler
 import PySimpleGUI as sg
 
 sg.theme("Dark")
@@ -19,6 +20,13 @@ def layout_tab_group():
                 "Reverse",
                 key="Tab Reverse",
                 layout=template_reverse_layout(),
+                expand_x=True,
+                expand_y=True,
+            ),
+            sg.Tab(
+                "Match",
+                key="Tab Match",
+                layout=template_match_layout(),
                 expand_x=True,
                 expand_y=True,
             ),
@@ -53,6 +61,7 @@ def main():
         event, values = window.read(timeout=None)
         template_create_events_handler(window, event, values)
         template_reverse_events_handler(window, event, values)
+        template_match_events_handler(window, event, values)
         if event == sg.WIN_CLOSED:
             break
         if event == sg.WINDOW_CLOSED:

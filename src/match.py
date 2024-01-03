@@ -100,7 +100,7 @@ def run(
     image_path: Path,
     template_path: Path,
     extra: str,
-    retry: int,
+    offset: int,
     left: Optional[int] = None,
     top: Optional[int] = None,
     height: Optional[int] = None,
@@ -140,13 +140,13 @@ def run(
     tmp_matching_folder.mkdir(exist_ok=True, parents=True)
 
     with Progress() as progress:
-        x_ranges_task = progress.add_task("[green]X Ranges...", total=retry * 2)
+        x_ranges_task = progress.add_task("[green]X Ranges...", total=offset * 2)
         y_ranges_task = progress.add_task(
-            "[blue]Y Ranges...", total=(retry * 2) * (retry * 2)
+            "[blue]Y Ranges...", total=(offset * 2) * (offset * 2)
         )
 
-        for x in range(-retry, retry + 1):
-            for y in range(-retry, retry + 1):
+        for x in range(-offset, offset + 1):
+            for y in range(-offset, offset + 1):
                 if left_border + x < 0 or top_border + y < 0:
                     progress.advance(y_ranges_task)
                     progress.console.print(
@@ -238,9 +238,13 @@ def run(
                 bottom_border=bottom_border_highest,
                 draw_information=True,
             )
+            return highest_path, info_path
+        else:
+            return None, None
     else:
         console.print(
             f"The highest found is [red]{highest_image_score:.6f}[/red] with borders: "
             f"left: {left_border_highest}, top: {top_border_highest}, "
             f"right: {right_border_highest}, bottom: {bottom_border_highest}"
         )
+        return None, None

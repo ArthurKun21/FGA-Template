@@ -129,11 +129,11 @@ def get_image() -> Optional[Path]:
     help="Extra Information",
 )
 @click.option(
-    "--retry",
+    "--offset",
     required=False,
     default=10,
     type=int,
-    help="Number of retries",
+    help="Number of offset",
 )
 def main(
     task: Optional[str],
@@ -146,7 +146,7 @@ def main(
     height: Optional[int],
     width: Optional[int],
     extra: Optional[str] = "center",
-    retry: Optional[int] = 10,
+    offset: Optional[int] = 10,
 ):
     console.print(f"Current Working Directory:\t[yellow]{cwd}")
 
@@ -192,7 +192,7 @@ def main(
             height=height,
             width=width,
             extra=extra,
-            retry=retry,
+            offset=offset,
         )
 
 
