@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from tkinter import Image
 from typing import Optional
 
 import image_handler
@@ -217,6 +218,7 @@ def create_operations_layout(
                 button_color=selected_color
                 if f"{name}{function}" == active
                 else sg.theme_button_color(),
+                expand_x=True,
             )
             for name in operations
         ]
@@ -327,3 +329,35 @@ def create_directory_column(function: str):
         expand_y=True,
     )
     return directory_column
+
+
+def image_viewer_window(
+        image_path: Path,
+):
+    layout = [
+        [
+            sg.Graph(
+                canvas_size=(400, 400),
+                graph_bottom_left=(0, 0),
+                graph_top_right=(800, 800),
+                key="-GRAPH-",
+                enable_events=True,
+                background_color="lightblue",
+                drag_submits=True,
+                motion_events=True,
+                right_click_menu=[[""], ["Erase item", "Send to back"]],
+            )
+        ],
+        [sg.Text(key="-INFO-", size=(60, 1))],
+    ]
+    window = sg.Window(f"{image_path.name}", layout, finalize=True)
+    graph = window["-GRAPH-"]
+    graph.draw_image(image_path, location=(0, 800))
+    dragging = False
+    start_point = end_point = prior_rect = None
+    crosshair_lines = []
+    while True:
+        event, values = window.read()
+
+
+    window.close()

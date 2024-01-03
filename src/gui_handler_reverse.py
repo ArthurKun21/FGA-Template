@@ -180,6 +180,7 @@ def template_reverse_layout():
             sg.Frame(
                 "Mode",
                 create_operations_layout(function="Reverse"),
+                expand_x=True,
             )
         ],
         [
