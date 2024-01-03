@@ -30,9 +30,9 @@ def get_border_information(
         console.print("[red]Image not found![/red]")
         exit(0)
 
-    reference_image_resize_height = height_reference
-    reference_image_resize_width = math.floor(
-        (width / height) * reference_image_resize_height
+    reference_image_resize_height, reference_image_resize_width = get_resize_sizes(
+        width=width,
+        height=height,
     )
 
     left_border = math.floor((left / width) * reference_image_resize_width)
@@ -50,6 +50,15 @@ def get_border_information(
     )
 
 
+def get_resize_sizes(width: int, height: int) -> tuple[int, int]:
+    reference_image_resize_height = height_reference
+    reference_image_resize_width = math.floor(
+        (width / height) * reference_image_resize_height
+    )
+
+    return reference_image_resize_height, reference_image_resize_width
+
+
 def get_border_information_from_resize(
     reference_image_path: Path,
     resize_left: int,
@@ -64,9 +73,9 @@ def get_border_information_from_resize(
         console.print("[red]Image not found![/red]")
         exit(0)
 
-    reference_image_resize_height = height_reference
-    reference_image_resize_width = math.floor(
-        (width / height) * reference_image_resize_height
+    reference_image_resize_height, reference_image_resize_width = get_resize_sizes(
+        width=width,
+        height=height,
     )
 
     left_border = math.floor((resize_left / reference_image_resize_width) * width)
@@ -130,7 +139,7 @@ def print_table_of_information_resize(
     draw_information: bool = False,
 ):
     (
-        _,
+        resize_width,
         _,
         orig_left,
         orig_top,
@@ -143,6 +152,11 @@ def print_table_of_information_resize(
         resize_right=right_border,
         resize_bottom=bottom_border,
     )
+    if resize_width > 2_560:
+        width_reference = resize_width
+    else:
+        width_reference = 2_560
+
     width_template = right_border - left_border
     height_template = bottom_border - top_border
 

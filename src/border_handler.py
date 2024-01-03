@@ -7,6 +7,7 @@ from PIL import Image
 from rich.console import Console
 from rich.prompt import IntPrompt
 
+
 console = Console()
 
 
@@ -19,14 +20,38 @@ class MeasurementType(StrEnum):
 height_reference = 1_440
 width_reference = 2_560
 
+def get_resize_sizes(width: int, height: int) -> tuple[int, int]:
+    reference_image_resize_height = height_reference
+    reference_image_resize_width = math.floor(
+        (width / height) * reference_image_resize_height
+    )
+
+    return reference_image_resize_height, reference_image_resize_width
+
 
 def get_border_from_resize(
+    image_path: Path,
     left: Optional[int] = None,
     top: Optional[int] = None,
     template_width: Optional[int] = None,
     template_height: Optional[int] = None,
     measurement_type: MeasurementType = MeasurementType.NORMAL,
 ) -> tuple[int, int, int, int]:
+
+    with Image.open(image_path) as img:
+        width, height = img.size
+
+    is_wide = True if (width / height) > 2 else False
+
+    if is_wide:
+        _, resize_width = get_resize_sizes(
+            width=width,
+            height=height,
+        )
+        width_reference = int(resize_width)
+    else:
+        width_reference = 2_560
+
     if (
         left is not None
         and top is not None
@@ -42,7 +67,7 @@ def get_border_from_resize(
                 left = width_reference + left
             case _:
                 left = left
-        return left, top, left + template_width, top+ template_height
+        return left, top, left + template_width, top + template_height
 
     left_input = left
     top_input = top
