@@ -1,3 +1,4 @@
+from enum import auto
 import os
 import textwrap
 from pathlib import Path
@@ -260,6 +261,13 @@ def template_match_events_handler(window, event, values):
 
             template_path = Path(selected_template_name)
             if path.exists() and template_path.exists():
+                sg.popup(
+                    "Wait for the process to finish",
+                    auto_close_duration=2,
+                    auto_close=True,
+                    no_titlebar=True,
+                    non_blocking=True
+                )
                 template_path, info_path = match.run(
                     image_path=path,
                     template_path=template_path,
