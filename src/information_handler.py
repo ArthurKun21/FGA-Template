@@ -214,17 +214,20 @@ def print_table_of_information(
         draw.region(
             tmp_folder=template_image_path.parent,
             image_path=reference_image_path,
-            left=left_border,
-            top=top_border,
-            right=right_border,
-            bottom=bottom_border,
+            left=left,
+            top=top,
+            right=right,
+            bottom=bottom,
         )
+
+        template_center_x_orig = left + math.floor((right - left) / 2)
+        template_center_y_orig = top + math.floor((bottom - top) / 2)
 
         draw.location(
             tmp_folder=template_image_path.parent,
             image_path=reference_image_path,
-            x=template_center_x,
-            y=template_center_y,
+            x=template_center_x_orig,
+            y=template_center_y_orig,
         )
 
     return information_path
