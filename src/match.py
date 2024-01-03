@@ -146,6 +146,12 @@ def run(
 
         for x in range(-retry, retry + 1):
             for y in range(-retry, retry + 1):
+                if left_border + x < 0 or top_border + y < 0:
+                    progress.advance(y_ranges_task)
+                    progress.console.print(
+                        f"Skipping {left_border + x}, {top_border + y} because it is out of bounds!"
+                    )
+                    continue
                 based_image_path = prepare_based_image(
                     image_path=image_path,
                     tmp_folder=tmp_matching_folder,
