@@ -62,8 +62,8 @@ def prepare_based_image(
     crop_image_path.unlink(missing_ok=True)
     if resized_template_path is not None:
         renamed_file = (
-            resized_template_path.parent / f"{image_path.stem}_template_{left_border}, "
-            f"{top_border}, {right_border}, {bottom_border}.png"
+            resized_template_path.parent / f"{image_path.stem}_template_left_{left_border}_"
+            f"top_{top_border}_right_{right_border}_bottom_{bottom_border}.png"
         )
         resized_template_path.rename(renamed_file)
         resized_template_path = renamed_file
