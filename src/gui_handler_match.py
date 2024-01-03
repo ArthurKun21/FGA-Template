@@ -313,6 +313,5 @@ def template_match_events_handler(window, event, values):
             window["HeightMatchValidation"].update(
                 "",
             )
-            show_template_Match_calculations(window, values)
         except ValueError:
             window["HeightMatchValidation"].update("Invalid value", text_color="red")
