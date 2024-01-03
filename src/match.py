@@ -10,6 +10,7 @@ from rich.table import Table
 from rich.progress import Progress
 
 from PIL import Image
+import shutil
 import numpy as np
 import cv2
 
@@ -237,8 +238,14 @@ def run(
 
             highest_image_score_path = highest_path
             console.print(
-                f"Path {highest_image_score_path} with score {highest_image_score:.6f}"
+                f"Path {highest_image_score_path.name} with score {highest_image_score:.6f}"
             )
+
+            template_saved_path = (
+                tmp_folder
+                / f"{highest_image_score_path.stem}_template_{template_path.stem}{template_path.suffix}"
+            )
+            shutil.copy(template_path, template_saved_path)
 
             info_path = information_handler.print_table_of_information(
                 reference_image_path=image_path,
