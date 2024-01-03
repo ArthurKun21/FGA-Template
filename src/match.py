@@ -60,8 +60,21 @@ def prepare_based_image(
     )
 
     crop_image_path.unlink(missing_ok=True)
-    
+    if resized_template_path is not None:
+        renamed_file = (
+            resized_template_path.parent / f"{image_path.stem}_template_{left_border}, "
+            f"{top_border}, {right_border}, {bottom_border}.png"
+        )
+        resized_template_path.rename(renamed_file)
+        resized_template_path = renamed_file
+
     return resized_template_path
+
+
+def load_based_image(
+    image_path: Path,
+) -> Image.Image:
+    return Image.open(image_path)
 
 
 def match_images(
@@ -77,7 +90,7 @@ def match_images(
     result = cv2.matchTemplate(
         image=input_image_np_gray, templ=template, method=cv2.TM_CCOEFF_NORMED
     )
-    min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
+    _, max_val, _, _ = cv2.minMaxLoc(result)
 
     return max_val
 
@@ -115,7 +128,6 @@ def run(
 
     template_image_read = cv2.imread(f"{template_path}", cv2.IMREAD_GRAYSCALE)
 
-
     highest_image_score = 0.0
     highest_image_score_path = None
     left_border_highest = 0
@@ -124,6 +136,8 @@ def run(
     bottom_border_highest = 0
 
     tmp_matching_folder = tmp_folder / "matching"
+    tmp_matching_folder.mkdir(exist_ok=True, parents=True)
+
     with Progress() as progress:
         x_ranges_task = progress.add_task("[green]X Ranges...", total=retry * 2)
         y_ranges_task = progress.add_task(
@@ -132,13 +146,17 @@ def run(
 
         for x in range(-retry, retry + 1):
             for y in range(-retry, retry + 1):
-                based_image = prepare_based_image(
+                based_image_path = prepare_based_image(
                     image_path=image_path,
                     tmp_folder=tmp_matching_folder,
                     left_border=left_border + x,
                     top_border=top_border + y,
                     right_border=right_border + x,
                     bottom_border=bottom_border + y,
+                )
+
+                based_image = load_based_image(
+                    image_path=based_image_path,
                 )
 
                 score = match_images(
@@ -148,19 +166,21 @@ def run(
                 if score > 0.8:
                     progress.console.print(
                         f"Score: [green]{score:.6}[/green]\t"
+                        f"Left: [blue]{left_border + x}[/blue]\t"
+                        f"Top: [blue]{top_border + y}[/blue]\t"
+                        f"Right: [blue]{right_border + x}[/blue]\t"
+                        f"Bottom: [blue]{bottom_border + y}[/blue]\t"
                     )
                     if score > highest_image_score:
-                        highest_image_score_path = based_image
+                        highest_image_score_path = based_image_path
                         highest_image_score = score
                         left_border_highest = left_border + x
                         top_border_highest = top_border + y
                         right_border_highest = right_border + x
                         bottom_border_highest = bottom_border + y
                 else:
-                    progress.console.print(
-                        f"Score: [red]{score:.6f}[/red]\t"
-                    )
-                    based_image.unlink(missing_ok=True)
+                    progress.console.print(f"Score: [red]{score:.6f}[/red]\t")
+                    based_image_path.unlink(missing_ok=True)
                 progress.advance(y_ranges_task)
             progress.advance(x_ranges_task)
 
@@ -180,11 +200,13 @@ def run(
 
         console.print(table)
         if highest_image_score_path is not None:
-            highest_path = tmp_folder / "highest.png"
+            highest_path = tmp_folder / highest_image_score_path.name
             highest_image_score_path.rename(highest_path)
 
             highest_image_score_path = highest_path
-        console.print(f"Path {highest_image_score_path} with score {highest_image_score:.6f}")
+        console.print(
+            f"Path {highest_image_score_path} with score {highest_image_score:.6f}"
+        )
 
         info_path = information_handler.print_table_of_information(
             reference_image_path=image_path,
