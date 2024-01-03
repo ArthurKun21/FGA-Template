@@ -98,7 +98,7 @@ def template_match_layout():
                     load_directory_images_column(function="Match"),
                 ],
                 expand_x=True,
-                size=(720, 175),
+                size=(720, 165),
             )
         ],
         [
@@ -108,7 +108,7 @@ def template_match_layout():
                     load_directory_images_column(function="MatchTemplate"),
                 ],
                 expand_x=True,
-                size=(720, 175),
+                size=(720, 165),
             )
         ],
         [
@@ -160,7 +160,7 @@ def template_match_events_handler(window, event, values):
         for operation in operations:
             window[operation].update(button_color=sg.theme_button_color())
         window[event].update(button_color=selected_color)
-        
+
     if event == "ImageMatchListbox":
         selected_image_name = values["ImageMatchListbox"][0]
         path = Path(selected_image_name)
