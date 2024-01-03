@@ -172,6 +172,8 @@ def run(
                     right_border=right_border + x,
                     bottom_border=bottom_border + y,
                 )
+                if based_image_path is None:
+                    continue
 
                 based_image = load_based_image(
                     image_path=based_image_path,
