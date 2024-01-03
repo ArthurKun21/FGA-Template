@@ -11,7 +11,7 @@ def create_tmp_folder(
     image: Path,
     function: Literal["create", "match", "draw", "reverse"],
 ) -> Path:
-    current_datetime = datetime.now().strftime("%Y%m%d%H%M%S")
+    current_datetime = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
     try:
         folder_name = f"{function}_{image.stem}_v{current_datetime}"
         tmp_folder = image.parent / "tmp" / folder_name
