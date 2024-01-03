@@ -230,11 +230,16 @@ def template_match_events_handler(window, event, values):
                     selected_operation = operation.replace("Match", "")
 
             selected_image_name = values["ImageMatchListbox"][0]
+
+            selected_template_name = values["ImageMatchTemplateListbox"][0]
+
             path = Path(selected_image_name)
-            if path.exists():
+
+            template_path = Path(selected_template_name)
+            if path.exists() and template_path.exists():
                 template_path, info_path = match.run(
                     image_path=path,
-                    template_path=path,
+                    template_path=template_path,
                     offset=offset_input,
                     left=left_input,
                     top=top_input,
