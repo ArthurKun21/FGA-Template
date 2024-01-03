@@ -58,6 +58,9 @@ def prepare_based_image(
         template_path=crop_image_path,
         tmp_folder=tmp_folder,
     )
+
+    crop_image_path.unlink(missing_ok=True)
+    
     return resized_template_path
 
 
@@ -179,9 +182,19 @@ def run(
         if highest_image_score_path is not None:
             highest_path = tmp_folder / "highest.png"
             highest_image_score_path.rename(highest_path)
-            
+
             highest_image_score_path = highest_path
         console.print(f"Path {highest_image_score_path} with score {highest_image_score:.6f}")
+
+        info_path = information_handler.print_table_of_information(
+            reference_image_path=image_path,
+            template_image_path=highest_image_score_path,
+            left=left_border_highest,
+            top=top_border_highest,
+            right=right_border_highest,
+            bottom=bottom_border_highest,
+            draw_information=True,
+        )
     else:
         console.print(
             f"The highest found is [red]{highest_image_score:.6f}[/red] with borders: "
