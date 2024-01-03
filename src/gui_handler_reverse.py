@@ -190,6 +190,7 @@ def template_reverse_layout():
             sg.Frame(
                 "Information",
                 create_information_layout(function="Reverse"),
+                expand_x=True,
             )
         ],
     ]

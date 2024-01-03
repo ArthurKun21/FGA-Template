@@ -119,6 +119,7 @@ def template_create_layout():
             sg.Frame(
                 "Information",
                 create_information_layout(function="Create"),
+                expand_x=True,
             )
         ],
     ]
