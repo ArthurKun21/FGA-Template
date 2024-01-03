@@ -238,9 +238,13 @@ def run(
                 bottom_border=bottom_border_highest,
                 draw_information=True,
             )
+            return highest_path, info_path
+        else:
+            return None, None
     else:
         console.print(
             f"The highest found is [red]{highest_image_score:.6f}[/red] with borders: "
             f"left: {left_border_highest}, top: {top_border_highest}, "
             f"right: {right_border_highest}, bottom: {bottom_border_highest}"
         )
+        return None, None

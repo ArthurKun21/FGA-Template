@@ -136,7 +136,7 @@ def template_match_layout():
             ),
             text_input_validation(
                 inputKey="OffsetMatch",
-                default_text="0",
+                default_text="10",
                 expand_x=False,
                 size=(25, 1),
                 justification="center",
