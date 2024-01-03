@@ -6,7 +6,6 @@ import match
 import PySimpleGUI as sg
 from gui_components import (
     create_directory_column,
-    create_information_layout,
     create_operations_layout,
     load_directory_images_column,
     load_image_size_information,
@@ -208,6 +207,8 @@ def template_match_events_handler(window, event, values):
         else:
             items = load_images_from_directory(path)
             window["ImageMatchListbox"].update(values=items)
+            window["ImageMatchTemplateListbox"].update(values=items)
+
     if event == "FolderMatch":
         path = Path(f"{values["FolderMatch"]}")
         if not path.exists():
@@ -221,6 +222,8 @@ def template_match_events_handler(window, event, values):
         else:
             items = load_images_from_directory(path)
             window["ImageMatchListbox"].update(values=items)
+            window["ImageMatchTemplateListbox"].update(values=items)
+
     if event == "ButtonSubmitMatch":
         try:
             left_input = int(values["LeftMatch"])
