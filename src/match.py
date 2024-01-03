@@ -247,7 +247,7 @@ def run(
             )
             shutil.copy(template_path, template_saved_path)
 
-            info_path = information_handler.print_table_of_information(
+            info_path = information_handler.print_table_of_information_resize(
                 reference_image_path=image_path,
                 template_image_path=highest_image_score_path,
                 left=left_original_highest,

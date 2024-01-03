@@ -120,8 +120,7 @@ def create_location(
             suffix = ""
     return f"Location({x}, {y}){suffix}"
 
-
-def print_table_of_information(
+def print_table_of_information_resize(
     reference_image_path: Path,
     template_image_path: Path,
     left: int,
@@ -228,6 +227,114 @@ def print_table_of_information(
             image_path=reference_image_path,
             x=template_center_x_orig,
             y=template_center_y_orig,
+        )
+
+    return information_path
+
+def print_table_of_information(
+    reference_image_path: Path,
+    template_image_path: Path,
+    left: int,
+    top: int,
+    right: int,
+    bottom: int,
+    draw_information: bool = False,
+):
+    (
+        left_border,
+        top_border,
+        right_border,
+        bottom_border,
+        width_template,
+        height_template,
+        left_border_from_center,
+        left_border_from_right,
+        template_center_x,
+        template_center_y,
+        template_center_x_from_center,
+        template_center_x_from_right,
+    ) = fetch_image_manipulation_information(
+        reference_image_path, left, top, right, bottom
+    )
+
+    table_size = Table(show_header=False, show_lines=True)
+    table_size.add_row("Width", f"{width_template}")
+    table_size.add_row("Height", f"{height_template}")
+
+    console.print(table_size)
+
+    table_region = Table(title="Region", title_justify="center", show_lines=True)
+    table_region.add_column("Transformations", justify="center")
+    table_region.add_column("Area", justify="center")
+
+    region_normal = create_region(
+        left_border, top_border, width_template, height_template, "normal"
+    )
+    region_from_center = create_region(
+        left_border_from_center, top_border, width_template, height_template, "center"
+    )
+    region_from_right = create_region(
+        left_border_from_right, top_border, width_template, height_template, "right"
+    )
+
+    table_region.add_row("Normal", region_normal)
+    table_region.add_row("From Center", region_from_center)
+    table_region.add_row("From Right", region_from_right)
+
+    console.print(table_region)
+
+    table_location = Table(title="Location", title_justify="center", show_lines=True)
+    table_location.add_column("Transformations", justify="center")
+    table_location.add_column("Location", justify="center")
+
+    location_normal = create_location(template_center_x, template_center_y, "normal")
+    location_from_center = create_location(
+        template_center_x_from_center, template_center_y, "center"
+    )
+    location_from_right = create_location(
+        template_center_x_from_right, template_center_y, "right"
+    )
+
+    table_location.add_row("Normal", location_normal)
+    table_location.add_row("From Center", location_from_center)
+    table_location.add_row("From Right", location_from_right)
+
+    console.print(table_location)
+
+    information_path = save_the_information(
+        reference_image_path=reference_image_path,
+        template_image_path=template_image_path,
+        region_normal=region_normal,
+        region_from_center=region_from_center,
+        region_from_right=region_from_right,
+        location_normal=location_normal,
+        location_from_center=location_from_center,
+        location_from_right=location_from_right,
+        left=left,
+        top=top,
+        right=right,
+        bottom=bottom,
+        resized_left=left_border,
+        resized_top=top_border,
+        resized_right=right_border,
+        resized_bottom=bottom_border,
+    )
+
+    if draw_information:
+        draw.region(
+            tmp_folder=template_image_path.parent,
+            image_path=reference_image_path,
+            left=left_border,
+            top=top_border,
+            right=right_border,
+            bottom=bottom_border,
+        )
+
+        draw.location(
+            tmp_folder=template_image_path.parent,
+            image_path=reference_image_path,
+            x=template_center_x,
+            y=template_center_y,
         )
 
     return information_path

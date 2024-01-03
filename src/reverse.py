@@ -81,7 +81,7 @@ def run(
         directory_handler.cleanup(tmp_folder, crop_image_path)
         return
 
-    info_path = information_handler.print_table_of_information(
+    info_path = information_handler.print_table_of_information_resize(
         reference_image_path=image_path,
         template_image_path=resized_template_path,
         left=orig_left,
