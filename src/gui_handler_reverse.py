@@ -106,7 +106,7 @@ def show_template_reverse_calculations(window, values):
 
         selected_operation = operations[0]
         for operation in operations:
-            color = window.FindElement(operation).ButtonColor
+            color = window[operation].ButtonColor
             console.print(
                 f"Operation: [blue]{operation}[/blue] Color: [blue]{color}[/blue]"
             )
@@ -267,7 +267,7 @@ def template_reverse_events_handler(window, event, values):
 
             selected_operation = operations[0]
             for operation in operations:
-                color = window.FindElement(operation).ButtonColor
+                color = window[operation].ButtonColor
                 console.print(
                     f"Operation: [blue]{operation}[/blue] Color: [blue]{color}[/blue]"
                 )
