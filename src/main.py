@@ -128,6 +128,13 @@ def get_image() -> Optional[Path]:
     type=str,
     help="Extra Information",
 )
+@click.option(
+    "--retry",
+    required=False,
+    default=10,
+    type=int,
+    help="Number of retries",
+)
 def main(
     task: Optional[str],
     image: Optional[Path],
@@ -139,6 +146,7 @@ def main(
     height: Optional[int],
     width: Optional[int],
     extra: Optional[str] = "center",
+    retry: Optional[int] = 10,
 ):
     console.print(f"Current Working Directory:\t[yellow]{cwd}")
 
@@ -176,14 +184,15 @@ def main(
     if hasattr(task_to_perform, "run"):
         task_to_perform.run(
             image_path=image,
-            template=template,
+            template_path=template,
             left=left,
             right=right,
             top=top,
             bottom=bottom,
             height=height,
             width=width,
-            extra=extra
+            extra=extra,
+            retry=retry,
         )
 
 
