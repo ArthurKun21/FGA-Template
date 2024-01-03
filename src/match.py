@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Tuple
 
 import border_handler
 import directory_handler
@@ -23,7 +23,7 @@ def prepare_based_image(
     top_border: int,
     right_border: int,
     bottom_border: int,
-):
+) -> Tuple[Optional[Path], Optional[int], Optional[int], Optional[int], Optional[int]]:
     (
         _,
         _,
@@ -51,7 +51,7 @@ def prepare_based_image(
     if crop_image_path is None:
         console.print("[red]Failed to create template![/red]")
         directory_handler.cleanup(tmp_folder)
-        return None
+        return None, None, None, None, None
 
     resized_template_path = image_handler.resize_template_to_reference(
         original_image_path=image_path,
@@ -62,13 +62,14 @@ def prepare_based_image(
     crop_image_path.unlink(missing_ok=True)
     if resized_template_path is not None:
         renamed_file = (
-            resized_template_path.parent / f"{image_path.stem}_template_left_{left_border}_"
+            resized_template_path.parent
+            / f"{image_path.stem}_template_left_{left_border}_"
             f"top_{top_border}_right_{right_border}_bottom_{bottom_border}.png"
         )
         resized_template_path.rename(renamed_file)
         resized_template_path = renamed_file
 
-    return resized_template_path
+    return resized_template_path, orig_left, orig_top, orig_right, orig_bottom
 
 
 def load_based_image(
@@ -135,6 +136,11 @@ def run(
     right_border_highest = 0
     bottom_border_highest = 0
 
+    left_original_highest = 0
+    top_original_highest = 0
+    right_original_highest = 0
+    bottom_original_highest = 0
+
     tmp_matching_folder = tmp_folder / "matching"
     tmp_matching_folder.mkdir(exist_ok=True, parents=True)
 
@@ -152,7 +158,13 @@ def run(
                         f"Skipping {left_border + x}, {top_border + y} because it is out of bounds!"
                     )
                     continue
-                based_image_path = prepare_based_image(
+                (
+                    based_image_path,
+                    orig_left,
+                    orig_top,
+                    orig_right,
+                    orig_bottom,
+                ) = prepare_based_image(
                     image_path=image_path,
                     tmp_folder=tmp_matching_folder,
                     left_border=left_border + x,
@@ -184,6 +196,18 @@ def run(
                         top_border_highest = top_border + y
                         right_border_highest = right_border + x
                         bottom_border_highest = bottom_border + y
+
+                        if orig_left is not None:
+                            left_original_highest = orig_left
+
+                        if orig_top is not None:
+                            top_original_highest = orig_top
+
+                        if orig_right is not None:
+                            right_original_highest = orig_right
+
+                        if orig_bottom is not None:
+                            bottom_original_highest = orig_bottom
                 else:
                     progress.console.print(f"Score: [red]{score:.6f}[/red]\t")
                     based_image_path.unlink(missing_ok=True)
@@ -210,19 +234,19 @@ def run(
             highest_image_score_path.rename(highest_path)
 
             highest_image_score_path = highest_path
-        console.print(
-            f"Path {highest_image_score_path} with score {highest_image_score:.6f}"
-        )
+            console.print(
+                f"Path {highest_image_score_path} with score {highest_image_score:.6f}"
+            )
 
-        info_path = information_handler.print_table_of_information(
-            reference_image_path=image_path,
-            template_image_path=highest_image_score_path,
-            left=left_border_highest,
-            top=top_border_highest,
-            right=right_border_highest,
-            bottom=bottom_border_highest,
-            draw_information=True,
-        )
+            info_path = information_handler.print_table_of_information(
+                reference_image_path=image_path,
+                template_image_path=highest_image_score_path,
+                left=left_original_highest,
+                top=top_original_highest,
+                right=right_original_highest,
+                bottom=bottom_original_highest,
+                draw_information=True,
+            )
     else:
         console.print(
             f"The highest found is [red]{highest_image_score:.6f}[/red] with borders: "
