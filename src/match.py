@@ -120,6 +120,7 @@ def run(
         right_border,
         bottom_border,
     ) = border_handler.get_border_from_resize(
+        image_path=image_path,
         left=left,
         top=top,
         template_height=height,
