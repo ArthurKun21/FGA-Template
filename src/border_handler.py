@@ -18,7 +18,7 @@ class MeasurementType(StrEnum):
 
 
 height_reference = 1_440
-width_reference = 2_560
+
 
 def get_resize_sizes(width: int, height: int) -> tuple[int, int]:
     reference_image_resize_height = height_reference
