@@ -67,7 +67,12 @@ def get_border_from_resize(
                 left = width_reference + left
             case _:
                 left = left
-        return left, top, left + template_width, top + template_height
+        return (
+            left,
+            top,
+            left + template_width,
+            top + template_height,
+        )
 
     left_input = left
     top_input = top
@@ -85,6 +90,9 @@ def get_border_from_resize(
         case MeasurementType.RIGHT:
             width_int_range_hint = f"0 ~ {width_reference}"
             width_int_range = range(-width_reference, 0)
+        case _:
+            width_int_range_hint = f"0 ~ {width_reference}"
+            width_int_range = range(0, width_reference)
 
     while left_input is None:
         left_input = IntPrompt.ask(
@@ -124,7 +132,12 @@ def get_border_from_resize(
         case _:
             left_input = left_input
 
-    return left_input, top_input, left_input + width_input, top_input + height_input
+    return (
+        left_input,
+        top_input,
+        left_input + width_input,
+        top_input + height_input,
+    )
 
 
 def get_border(
