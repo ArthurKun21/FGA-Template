@@ -1,7 +1,7 @@
-from gui_handler_create import template_create_layout, template_create_events_handler
-from gui_handler_reverse import template_reverse_layout, template_reverse_events_handler
-from gui_handler_match import template_match_layout, template_match_events_handler
 import PySimpleGUI as sg
+from gui_handler_create import template_create_events_handler, template_create_layout
+from gui_handler_match import template_match_events_handler, template_match_layout
+from gui_handler_reverse import template_reverse_events_handler, template_reverse_layout
 
 sg.theme("Dark")
 
@@ -51,11 +51,11 @@ def main():
         "FGA Template",
         layout=layout,
         size=(540, 720),
-        location=(0, 0),
         return_keyboard_events=True,
         finalize=True,
         resizable=False,
     )
+    window.move_to_center()
 
     while True:
         event, values = window.read(timeout=None)
