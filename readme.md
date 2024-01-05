@@ -21,4 +21,6 @@ Current plans.
 
 5. `GUI` - A simple GUI to help with the usage of the program. Currently considering `pysimplegui` as the GUI library.
 
-6. `Detect Text` - Uses PyTesseract to output the OCR of the selected text
+6. `Transform and Detect Text` - Given the template `Left`, `Right`, `Top`, `Bottom` and `another reference image`. It would reverse the calculations of the template sizes and use it to transform the image to the template format. Use PyTesseract to output the OCR of the selected text from the created template image.
+
+7. `Detect Text` - Uses PyTesseract to output the OCR of the selected text.
