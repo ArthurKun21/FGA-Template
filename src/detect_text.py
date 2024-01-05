@@ -154,13 +154,23 @@ def run(
         console.print(f"Detected text: [blue]{text}[/blue]")
         directory_handler.cleanup(crop_image_path)
 
-        image_name = (
+        detected_image_path = (
             resized_template_path.parent
             / f"{resized_template_path.stem}_detect_text{resized_template_path.suffix}"
         )
-        resized_template_path.rename(image_name)
+        resized_template_path.rename(detected_image_path)
 
-        text_name = image_name.parent / "Detected text.txt"
+        info_path = information_handler.print_table_of_information_resize(
+            reference_image_path=image_path,
+            template_image_path=detected_image_path,
+            left_border=left_border,
+            top_border=top_border,
+            right_border=right_border,
+            bottom_border=bottom_border,
+            draw_information=True,
+        )
+
+        text_name = detected_image_path.parent / "Detected text.txt"
         with open(text_name, "w") as f:
             f.write(text)
 
