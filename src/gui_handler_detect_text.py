@@ -2,9 +2,9 @@ import os
 import textwrap
 from pathlib import Path
 
+import detect_text
 import information_handler
 import PySimpleGUI as sg
-import detect_text
 from gui_components import (
     create_directory_column,
     create_information_layout,
@@ -287,7 +287,7 @@ def template_detect_text_events_handler(window, event, values):
                     extra=selected_operation,
                 )
                 if template_path is not None and info_path is not None:
-                    load_image_window(template_path, info_path)
+                    load_image_window(template_path, info_path, output_text=output_text)
         except ValueError:
             console.print_exception()
             sg.popup(
@@ -333,7 +333,9 @@ def template_detect_text_events_handler(window, event, values):
             )
             show_template_DetectText_calculations(window, values)
         except ValueError:
-            window["WidthDetectTextValidation"].update("Invalid value", text_color="red")
+            window["WidthDetectTextValidation"].update(
+                "Invalid value", text_color="red"
+            )
 
     if event == "TopDetectText":
         try:
@@ -353,4 +355,6 @@ def template_detect_text_events_handler(window, event, values):
             )
             show_template_DetectText_calculations(window, values)
         except ValueError:
-            window["HeightDetectTextValidation"].update("Invalid value", text_color="red")
+            window["HeightDetectTextValidation"].update(
+                "Invalid value", text_color="red"
+            )
