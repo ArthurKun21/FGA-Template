@@ -174,4 +174,4 @@ def run(
         with open(text_name, "w") as f:
             f.write(text)
 
-        return resized_template_path, info_path, text
+        return detected_image_path, info_path, text
