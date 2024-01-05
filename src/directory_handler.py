@@ -9,7 +9,7 @@ console = Console()
 
 def create_tmp_folder(
     image: Path,
-    function: Literal["create", "match", "draw", "reverse"],
+    function: Literal["create", "match", "draw", "reverse", "detect_text"],
 ) -> Path:
     current_datetime = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
     try:

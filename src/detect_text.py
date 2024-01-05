@@ -11,22 +11,45 @@ import numpy as np
 from PIL import Image
 from rich.console import Console
 
+import pytesseract
+
+cwd = Path(__file__).cwd()
+
+tessdata = cwd / "tessdata" / "eng.traineddata"
+tessdata_dir_config = f"--tessdata-dir {tessdata}"
 console = Console()
+
+
+def detect_text(
+        image_np: np.ndarray,
+) -> Optional[str]:
+    pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+
+    try:
+        text = pytesseract.image_to_string(image_np, config=tessdata_dir_config)
+        return text
+    except Exception:
+        console.print_exception()
+        return None
 
 
 def set_image_threshold(
     image_path: Path,
     threshold: float = 0.5,
-):
-    with Image.open(image_path) as image:
-        input_image_np = np.array(image)
+) -> Optional[np.ndarray]:
+    try:
+        with Image.open(image_path) as image:
+            input_image_np = np.array(image)
 
-        # input_image_np_gray = cv2.cvtColor(input_image_np, cv2.COLOR_RGB2GRAY)
-        threshold_int = floor(threshold * 255)
+            threshold_int = floor(threshold * 255)
 
-        _, threshold_image_np = cv2.threshold(
-            input_image_np, threshold_int, 255, cv2.THRESH_BINARY
-        )
+            _, threshold_image_np = cv2.threshold(
+                input_image_np, threshold_int, 255, cv2.THRESH_BINARY
+            )
+            return threshold_image_np
+    except FileNotFoundError:
+        console.print_exception()
+        return None
 
 
 def run(
@@ -40,7 +63,7 @@ def run(
 ):
     console.print(f"Creating template from image: [blue]{image_path}[/blue]")
     tmp_folder = directory_handler.create_tmp_folder(
-        image=image_path, function="reverse"
+        image=image_path, function="detect_text"
     )
     if extra in border_handler.MeasurementType.__members__:  # type: ignore
         measurement_type = border_handler.MeasurementType[extra]
@@ -100,3 +123,31 @@ def run(
         console.print("[red]Failed to create template![/red]")
         directory_handler.cleanup(tmp_folder, crop_image_path)
         return
+
+    based_image_np = set_image_threshold(
+        image_path=image_path,
+    )
+    if based_image_np is None:
+        resized_template_path.unlink(missing_ok=True)
+        return
+
+    text = detect_text(
+        image_np=based_image_np,
+    )
+
+    if text is None:
+        console.print("[red]Failed to detect text![/red]")
+        directory_handler.cleanup(tmp_folder, crop_image_path)
+        return ""
+    else:
+        console.print(f"Detected text: [blue]{text}[/blue]")
+        directory_handler.cleanup(tmp_folder, crop_image_path)
+
+        image_name = resized_template_path.parent / f"{text}{resized_template_path.suffix}"
+        resized_template_path.rename(image_name)
+
+        text_name = resized_template_path.parent / "Detected text.txt"
+        with open(text_name, "w") as f:
+            f.write(text)
+
+        return text
