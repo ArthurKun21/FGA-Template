@@ -8,26 +8,36 @@ import directory_handler
 import image_handler
 import information_handler
 import numpy as np
+import pytesseract
 from PIL import Image
+from pytesseract import TesseractError, TesseractNotFoundError
 from rich.console import Console
 
-import pytesseract
+console = Console()
 
 cwd = Path(__file__).cwd()
 
-tessdata = cwd / "tessdata" / "eng.traineddata"
-tessdata_dir_config = f"--tessdata-dir {tessdata}"
-console = Console()
+tessdata = cwd / "tessdata"
+
+tessdata_dir_config = f'--tessdata-dir "{tessdata}"'
 
 
 def detect_text(
-        image_np: np.ndarray,
+    image_np: np.ndarray,
 ) -> Optional[str]:
-    pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+    pytesseract.pytesseract.tesseract_cmd = (
+        r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+    )
 
     try:
         text = pytesseract.image_to_string(image_np, config=tessdata_dir_config)
         return text
+    except TesseractNotFoundError:
+        console.print_exception()
+        return None
+    except TesseractError:
+        console.print_exception()
+        return None
     except Exception:
         console.print_exception()
         return None
@@ -65,6 +75,7 @@ def run(
     tmp_folder = directory_handler.create_tmp_folder(
         image=image_path, function="detect_text"
     )
+
     if extra in border_handler.MeasurementType.__members__:  # type: ignore
         measurement_type = border_handler.MeasurementType[extra]
     else:
@@ -125,7 +136,7 @@ def run(
         return
 
     based_image_np = set_image_threshold(
-        image_path=image_path,
+        image_path=resized_template_path,
     )
     if based_image_np is None:
         resized_template_path.unlink(missing_ok=True)
@@ -137,16 +148,19 @@ def run(
 
     if text is None:
         console.print("[red]Failed to detect text![/red]")
-        directory_handler.cleanup(tmp_folder, crop_image_path)
+        directory_handler.cleanup(crop_image_path)
         return ""
     else:
         console.print(f"Detected text: [blue]{text}[/blue]")
-        directory_handler.cleanup(tmp_folder, crop_image_path)
+        directory_handler.cleanup(crop_image_path)
 
-        image_name = resized_template_path.parent / f"{text}{resized_template_path.suffix}"
+        image_name = (
+            resized_template_path.parent
+            / f"{resized_template_path.stem}_detect_text{resized_template_path.suffix}"
+        )
         resized_template_path.rename(image_name)
 
-        text_name = resized_template_path.parent / "Detected text.txt"
+        text_name = image_name.parent / "Detected text.txt"
         with open(text_name, "w") as f:
             f.write(text)
 
