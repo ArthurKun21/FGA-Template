@@ -7,6 +7,7 @@ import create
 import draw
 import match
 import reverse
+import detect_text
 from click.exceptions import Abort, BadParameter, Exit, FileError, NoSuchOption
 from rich.console import Console
 from rich.table import Table
@@ -24,7 +25,7 @@ console = Console()
 image_extensions = [".png", ".jpg"]
 
 
-task_list = [create, match, draw, reverse]
+task_list = [create, match, draw, reverse, detect_text]
 
 
 def get_image() -> Optional[Path]:

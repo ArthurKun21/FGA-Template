@@ -1,4 +1,5 @@
 import os
+from operator import le
 from pathlib import Path
 from typing import Optional
 
@@ -14,7 +15,13 @@ def copy_to_clipboard(text: str):
     sg.clipboard_set(text)
 
 
-def load_image_window(image_path: Path, info_path: Path):
+def load_image_window(
+    image_path: Path,
+    info_path: Path,
+    output_text: str = "",
+):
+    multi_line_visibility = True if len(output_text) > 0 else False
+
     with open(info_path) as f:
         info = toml.load(f)
 
@@ -131,6 +138,16 @@ def load_image_window(image_path: Path, info_path: Path):
                 "copy",
                 key="RightLocationCopy",
             ),
+        ],
+        [
+            sg.Frame(
+                "Detected Text",
+                layout=[[sg.Multiline(output_text, expand_x=True, expand_y=True)]],
+                visible=multi_line_visibility,
+                key="ImageTextFrame",
+                expand_x=True,
+                expand_y=True,
+            )
         ],
     ]
     window = sg.Window(f"{image_path.name}", layout, size=(800, 400))
