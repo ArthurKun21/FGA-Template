@@ -3,6 +3,7 @@ from gui_handler_create import template_create_events_handler, template_create_l
 from gui_handler_match import template_match_events_handler, template_match_layout
 from gui_handler_reverse import template_reverse_events_handler, template_reverse_layout
 from gui_handler_detect_text import template_detect_text_events_handler, template_detect_text_layout
+from gui_handler_text import template_text_events_handler, template_text_layout
 
 sg.theme("Dark")
 
@@ -33,8 +34,15 @@ def layout_tab_group():
             ),
             sg.Tab(
                 "Text Detection",
-                key="Tab Text",
+                key="Tab Detect Text",
                 layout=template_detect_text_layout(),
+                expand_x=True,
+                expand_y=True,
+            ),
+            sg.Tab(
+                "Text Only",
+                key="Tab Text",
+                layout=template_text_layout(),
                 expand_x=True,
                 expand_y=True,
             ),
@@ -71,6 +79,7 @@ def main():
         template_reverse_events_handler(window, event, values)
         template_match_events_handler(window, event, values)
         template_detect_text_events_handler(window, event, values)
+        template_text_events_handler(window, event, values)
         if event == sg.WIN_CLOSED:
             break
         if event == sg.WINDOW_CLOSED:
