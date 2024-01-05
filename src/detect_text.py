@@ -122,7 +122,7 @@ def run(
     if crop_image_path is None:
         console.print("[red]Failed to create template![/red]")
         directory_handler.cleanup(tmp_folder)
-        return
+        return None, None, None
 
     resized_template_path = image_handler.resize_template_to_reference(
         original_image_path=image_path,
@@ -133,14 +133,14 @@ def run(
     if resized_template_path is None:
         console.print("[red]Failed to create template![/red]")
         directory_handler.cleanup(tmp_folder, crop_image_path)
-        return
+        return None, None, None
 
     based_image_np = set_image_threshold(
         image_path=resized_template_path,
     )
     if based_image_np is None:
         resized_template_path.unlink(missing_ok=True)
-        return
+        return None, None, None
 
     text = detect_text(
         image_np=based_image_np,
@@ -149,7 +149,7 @@ def run(
     if text is None:
         console.print("[red]Failed to detect text![/red]")
         directory_handler.cleanup(crop_image_path)
-        return ""
+        return None, None, None
     else:
         console.print(f"Detected text: [blue]{text}[/blue]")
         directory_handler.cleanup(crop_image_path)
@@ -174,4 +174,4 @@ def run(
         with open(text_name, "w") as f:
             f.write(text)
 
-        return text
+        return resized_template_path, info_path, text
