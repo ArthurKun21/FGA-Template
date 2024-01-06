@@ -170,8 +170,13 @@ def run(
             draw_information=True,
         )
 
-        text_name = detected_image_path.parent / "Detected text.txt"
-        with open(text_name, "w") as f:
+        if len(text) > 0:
+            file_name = "Detected text.txt"
+        else:
+            file_name = "No Detected text.txt"
+
+        file_text_name_path = detected_image_path.parent / file_name
+        with open(file_text_name_path, "w") as f:
             f.write(text)
 
         return detected_image_path, info_path, text
