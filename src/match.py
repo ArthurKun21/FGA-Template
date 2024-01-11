@@ -66,6 +66,8 @@ def prepare_based_image(
             / f"{image_path.stem}_template_left_{left_border}_"
             f"top_{top_border}_right_{right_border}_bottom_{bottom_border}.png"
         )
+        if renamed_file.exists():
+            return None, None, None, None, None
         resized_template_path.rename(renamed_file)
         resized_template_path = renamed_file
 
