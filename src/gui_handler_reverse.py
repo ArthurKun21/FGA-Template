@@ -14,6 +14,7 @@ from gui_components import (
     load_image_window,
     load_images_from_directory,
     text_input_validation,
+    save_directory_settings
 )
 from rich.console import Console
 
@@ -236,6 +237,8 @@ def template_reverse_events_handler(window, event, values):
         else:
             items = load_images_from_directory(path)
             window["ImageReverseListbox"].update(values=items)
+            save_directory_settings("Reverse", path)
+
     if event == "FolderReverse":
         path = Path(f"{values["FolderReverse"]}")
         if not path.exists():
@@ -249,6 +252,8 @@ def template_reverse_events_handler(window, event, values):
         else:
             items = load_images_from_directory(path)
             window["ImageReverseListbox"].update(values=items)
+            save_directory_settings("Reverse", path)
+
     if event == "ButtonSubmitReverse":
         try:
             left_input = int(values["LeftReverse"])

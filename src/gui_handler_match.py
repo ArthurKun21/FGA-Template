@@ -13,6 +13,7 @@ from gui_components import (
     load_image_window,
     load_images_from_directory,
     text_input_validation,
+    save_directory_settings,
 )
 from rich.console import Console
 
@@ -235,6 +236,7 @@ def template_match_events_handler(window, event, values):
             items = load_images_from_directory(path)
             window["ImageMatchListbox"].update(values=items)
             window["ImageMatchTemplateListbox"].update(values=items)
+            save_directory_settings("Match", path)
 
     if event == "ButtonSubmitMatch":
         try:
