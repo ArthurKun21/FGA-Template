@@ -207,6 +207,9 @@ def run(
                 )
                 if based_image_path is None:
                     progress.advance(y_ranges_task)
+                    progress.console.print(
+                        "Skipping based image path due to error!"
+                    )
                     continue
 
                 based_image = load_based_image(
