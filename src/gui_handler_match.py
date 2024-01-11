@@ -131,14 +131,25 @@ def template_match_layout():
             sg.Button("Submit", key="ButtonSubmitMatch", enable_events=True),
             sg.Push(),
             sg.Text(
-                "Offset",
-                tooltip="Range of pixels to offset for the Image matching",
+                "Offset X",
+                tooltip="Range of pixels to offset in x for the Image matching",
             ),
             text_input_validation(
-                inputKey="OffsetMatch",
+                inputKey="OffsetXMatch",
                 default_text="10",
                 expand_x=False,
-                size=(25, 1),
+                size=(15, 1),
+                justification="center",
+            ),
+            sg.Text(
+                "Offset Y",
+                tooltip="Range of pixels to offset in y for the Image matching",
+            ),
+            text_input_validation(
+                inputKey="OffsetYMatch",
+                default_text="10",
+                expand_x=False,
+                size=(15, 1),
                 justification="center",
             ),
         ],
@@ -232,7 +243,8 @@ def template_match_events_handler(window, event, values):
             width_input = int(values["WidthMatch"])
             height_input = int(values["HeightMatch"])
 
-            offset_input = int(values["OffsetMatch"])
+            offset_x_input = int(values["OffsetXMatch"])
+            offset_y_input = int(values["OffsetYMatch"])
 
             if (left_input + width_input) < left_input or (
                 left_input + width_input
@@ -271,7 +283,8 @@ def template_match_events_handler(window, event, values):
                 template_path, info_path = match.run(
                     image_path=path,
                     template_path=template_path,
-                    offset=offset_input,
+                    offset_x=offset_x_input,
+                    offset_y=offset_y_input,
                     left=left_input,
                     top=top_input,
                     width=width_input,
@@ -322,14 +335,23 @@ def template_match_events_handler(window, event, values):
         except ValueError:
             window["LeftMatchValidation"].update("Invalid value", text_color="red")
 
-    if event == "OffsetMatch":
+    if event == "OffsetXMatch":
         try:
-            int(values["OffsetMatch"])
-            window["OffsetMatchValidation"].update(
+            int(values["OffsetXMatch"])
+            window["OffsetXMatchValidation"].update(
                 "",
             )
         except ValueError:
-            window["OffsetMatchValidation"].update("Invalid value", text_color="red")
+            window["OffsetXMatchValidation"].update("Invalid value", text_color="red")
+
+    if event == "OffsetYMatch":
+        try:
+            int(values["OffsetYMatch"])
+            window["OffsetYMatchValidation"].update(
+                "",
+            )
+        except ValueError:
+            window["OffsetYMatchValidation"].update("Invalid value", text_color="red")
 
     if event == "WidthMatch":
         try:

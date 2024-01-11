@@ -100,7 +100,8 @@ def run(
     image_path: Path,
     template_path: Path,
     extra: str,
-    offset: int,
+    offset_x: int,
+    offset_y: int,
     left: Optional[int] = None,
     top: Optional[int] = None,
     height: Optional[int] = None,
@@ -141,13 +142,13 @@ def run(
     tmp_matching_folder.mkdir(exist_ok=True, parents=True)
 
     with Progress() as progress:
-        x_ranges_task = progress.add_task("[green]X Ranges...", total=offset * 2)
-        y_ranges_task = progress.add_task(
-            "[blue]Y Ranges...", total=(offset * 2) * (offset * 2)
-        )
+        total_x_ranges = max(offset_x * 2, 1)
+        total_y_ranges = total_x_ranges * max(offset_y * 2, 1)
+        x_ranges_task = progress.add_task("[green]X Ranges...", total=total_x_ranges)
+        y_ranges_task = progress.add_task("[blue]Y Ranges...", total=total_y_ranges)
 
-        for x in range(-offset, offset + 1):
-            for y in range(-offset, offset + 1):
+        for x in range(-offset_x, offset_x + 1):
+            for y in range(-offset_y, offset_y + 1):
                 if left_border + x < 0 or top_border + y < 0:
                     progress.advance(y_ranges_task)
                     progress.console.print(
