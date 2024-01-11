@@ -20,3 +20,7 @@ Current plans.
    2. `Find` - Given the template image and an reference image. It would check the reference image for the region where it has the highest match rate with the template image.
 
 5. `GUI` - A simple GUI to help with the usage of the program. Currently considering `pysimplegui` as the GUI library.
+
+6. `Transform and Detect Text` - Given the template `Left`, `Right`, `Top`, `Bottom` and `another reference image`. It would reverse the calculations of the template sizes and use it to transform the image to the template format. Use PyTesseract to output the OCR of the selected text from the created template image.
+
+7. `Detect Text` - Uses PyTesseract to output the OCR of the selected text.
