@@ -24,6 +24,15 @@ def prepare_based_image(
     right_border: int,
     bottom_border: int,
 ) -> Tuple[Optional[Path], Optional[int], Optional[int], Optional[int], Optional[int]]:
+
+    renamed_file = (
+        tmp_folder
+        / f"{image_path.stem}_template_left_{left_border}_"
+        f"top_{top_border}_right_{right_border}_bottom_{bottom_border}.png"
+    )
+    if renamed_file.exists():
+        return None, None, None, None, None
+
     (
         _,
         _,
@@ -61,13 +70,6 @@ def prepare_based_image(
 
     crop_image_path.unlink(missing_ok=True)
     if resized_template_path is not None:
-        renamed_file = (
-            resized_template_path.parent
-            / f"{image_path.stem}_template_left_{left_border}_"
-            f"top_{top_border}_right_{right_border}_bottom_{bottom_border}.png"
-        )
-        if renamed_file.exists():
-            return None, None, None, None, None
         resized_template_path.rename(renamed_file)
         resized_template_path = renamed_file
 
