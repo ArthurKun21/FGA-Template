@@ -131,6 +131,21 @@ def run(
         measurement_type=measurement_type,
     )
 
+    (
+        reference_image_resize_width,
+        reference_image_resize_height,
+        _,
+        _,
+        _,
+        _,
+    ) = information_handler.get_border_information_from_resize(
+        reference_image_path=image_path,
+        resize_left=left_border,
+        resize_top=top_border,
+        resize_right=right_border,
+        resize_bottom=bottom_border,
+    )
+
     template_image_read = cv2.imread(f"{template_path}", cv2.IMREAD_GRAYSCALE)
 
     highest_image_score = 0.0
@@ -163,6 +178,18 @@ def run(
                 if top_border_offset < 0:
                     bottom_border_offset = bottom_border_offset - top_border_offset
                     top_border_offset = 0
+
+                if right_border_offset > reference_image_resize_width:
+                    left_border_offset = left_border_offset - (
+                        right_border_offset - reference_image_resize_width
+                    )
+                    right_border_offset = reference_image_resize_width
+
+                if bottom_border_offset > reference_image_resize_height:
+                    top_border_offset = top_border_offset - (
+                        bottom_border_offset - reference_image_resize_height
+                    )
+                    bottom_border_offset = reference_image_resize_height
 
                 (
                     based_image_path,
