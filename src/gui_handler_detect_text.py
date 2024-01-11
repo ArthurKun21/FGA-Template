@@ -14,6 +14,7 @@ from gui_components import (
     load_image_window,
     load_images_from_directory,
     text_input_validation,
+    save_directory_settings
 )
 from rich.console import Console
 
@@ -223,6 +224,7 @@ def template_detect_text_events_handler(window, event, values):
         path = Path(selected_image_name)
         if path.exists():
             os.startfile(f"{path}")
+            
     if event == "LoadDetectText":
         path = Path(values["FolderDetectText"])
         if not path.exists():
@@ -236,6 +238,8 @@ def template_detect_text_events_handler(window, event, values):
         else:
             items = load_images_from_directory(path)
             window["ImageDetectTextListbox"].update(values=items)
+            save_directory_settings("DetectText", path)
+
     if event == "FolderDetectText":
         path = Path(f"{values["FolderDetectText"]}")
         if not path.exists():

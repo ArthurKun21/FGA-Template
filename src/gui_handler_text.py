@@ -9,6 +9,7 @@ from gui_components import (
     load_directory_images_column,
     load_image_size_information,
     load_images_from_directory,
+    save_directory_settings,
 )
 from rich.console import Console
 
@@ -104,6 +105,7 @@ def template_text_events_handler(window, event, values):
         else:
             items = load_images_from_directory(path)
             window["ImageTextListbox"].update(values=items)
+
     if event == "FolderText":
         path = Path(f"{values["FolderText"]}")
         if not path.exists():
@@ -117,6 +119,8 @@ def template_text_events_handler(window, event, values):
         else:
             items = load_images_from_directory(path)
             window["ImageTextListbox"].update(values=items)
+            save_directory_settings("Text", path)
+
     if event == "ButtonSubmitText":
         try:
             selected_image_name = values["ImageTextListbox"][0]

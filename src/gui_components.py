@@ -6,9 +6,41 @@ from typing import Optional
 import image_handler
 import PySimpleGUI as sg
 import toml
+import json
 
 cwd = Path(__file__).cwd()
 image_extensions = [".png", ".jpg"]
+
+
+def load_directory_settings(function: str) -> Path:
+    settings_path = cwd / "fgat_settings.json"
+    if settings_path.is_file():
+        with open(settings_path) as f:
+            settings: dict = json.load(f)
+
+        function_path = settings.get(function, None)
+        if function_path is None:
+            return cwd
+        if Path(function_path).is_dir() and Path(function_path).exists():
+            return Path(function_path)
+        else:
+            return cwd
+    else:
+        return cwd
+
+
+def save_directory_settings(function: str, function_path: Path):
+    settings_path = cwd / "fgat_settings.json"
+    if settings_path.is_file():
+        with open(settings_path) as f:
+            settings: dict = json.load(f)
+    else:
+        settings = {}
+
+    if Path(function_path).is_dir() and Path(function_path).exists():
+        settings[function] = f"{function_path}"
+        with open(settings_path, "w") as f:
+            json.dump(settings, f, indent=4)
 
 
 def copy_to_clipboard(text: str):
@@ -343,11 +375,12 @@ def load_directory_images_column(function: str):
 
 
 def create_directory_column(function: str):
+    function_path = load_directory_settings(function=function)
     directory_column = sg.Col(
         [
             [
                 sg.Text("Folder"),
-                sg.Input(f"{cwd}", key=f"Folder{function}", enable_events=True),
+                sg.Input(f"{function_path}", key=f"Folder{function}", enable_events=True),
                 sg.FolderBrowse(key=f"FolderBrowse{function}", enable_events=True),
                 sg.Button("Load", key=f"Load{function}", enable_events=True),
             ],
