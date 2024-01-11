@@ -142,10 +142,10 @@ def run(
     tmp_matching_folder.mkdir(exist_ok=True, parents=True)
 
     with Progress() as progress:
-        x_ranges_task = progress.add_task("[green]X Ranges...", total=offset_x * 2)
-        y_ranges_task = progress.add_task(
-            "[blue]Y Ranges...", total=(offset_x * 2) * (offset_y * 2)
-        )
+        total_x_ranges = max(offset_x * 2, 1)
+        total_y_ranges = total_x_ranges * max(offset_y * 2, 1)
+        x_ranges_task = progress.add_task("[green]X Ranges...", total=total_x_ranges)
+        y_ranges_task = progress.add_task("[blue]Y Ranges...", total=total_y_ranges)
 
         for x in range(-offset_x, offset_x + 1):
             for y in range(-offset_y, offset_y + 1):
