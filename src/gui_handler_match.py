@@ -138,7 +138,7 @@ def template_match_layout():
                 inputKey="OffsetXMatch",
                 default_text="10",
                 expand_x=False,
-                size=(25, 1),
+                size=(15, 1),
                 justification="center",
             ),
             sg.Text(
@@ -149,7 +149,7 @@ def template_match_layout():
                 inputKey="OffsetYMatch",
                 default_text="10",
                 expand_x=False,
-                size=(25, 1),
+                size=(15, 1),
                 justification="center",
             ),
         ],
@@ -284,7 +284,7 @@ def template_match_events_handler(window, event, values):
                     image_path=path,
                     template_path=template_path,
                     offset_x=offset_x_input,
-                    offset_y=offset_y_input
+                    offset_y=offset_y_input,
                     left=left_input,
                     top=top_input,
                     width=width_input,
