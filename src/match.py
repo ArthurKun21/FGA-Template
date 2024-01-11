@@ -149,12 +149,19 @@ def run(
 
         for x in range(-offset_x, offset_x + 1):
             for y in range(-offset_y, offset_y + 1):
-                if left_border + x < 0 or top_border + y < 0:
-                    progress.advance(y_ranges_task)
-                    progress.console.print(
-                        f"Skipping {left_border + x}, {top_border + y} because it is out of bounds!"
-                    )
-                    continue
+                left_border_offset = left_border + x
+                top_border_offset = top_border + y
+                right_border_offset = right_border + x
+                bottom_border_offset = bottom_border + y
+
+                if left_border_offset < 0:
+                    right_border_offset = right_border_offset - left_border_offset
+                    left_border_offset = 0
+
+                if top_border_offset < 0:
+                    bottom_border_offset = bottom_border_offset - top_border_offset
+                    top_border_offset = 0
+
                 (
                     based_image_path,
                     orig_left,
@@ -164,10 +171,10 @@ def run(
                 ) = prepare_based_image(
                     image_path=image_path,
                     tmp_folder=tmp_matching_folder,
-                    left_border=left_border + x,
-                    top_border=top_border + y,
-                    right_border=right_border + x,
-                    bottom_border=bottom_border + y,
+                    left_border=left_border_offset,
+                    top_border=top_border_offset,
+                    right_border=right_border_offset,
+                    bottom_border=bottom_border_offset,
                 )
                 if based_image_path is None:
                     continue
