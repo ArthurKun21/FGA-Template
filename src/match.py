@@ -190,10 +190,10 @@ def run(
                 if score > 0.8:
                     progress.console.print(
                         f"Score: [green]{score:.6}[/green]\t"
-                        f"Left: [blue]{left_border + x}[/blue]\t"
-                        f"Top: [blue]{top_border + y}[/blue]\t"
-                        f"Right: [blue]{right_border + x}[/blue]\t"
-                        f"Bottom: [blue]{bottom_border + y}[/blue]\t"
+                        f"Left: [blue]{left_border_offset}[/blue]\t"
+                        f"Top: [blue]{top_border_offset}[/blue]\t"
+                        f"Right: [blue]{right_border_offset}[/blue]\t"
+                        f"Bottom: [blue]{bottom_border_offset}[/blue]\t"
                     )
                     if score > highest_image_score:
                         highest_image_score_path = based_image_path
