@@ -179,6 +179,7 @@ def run(
                     bottom_border=bottom_border_offset,
                 )
                 if based_image_path is None:
+                    progress.advance(y_ranges_task)
                     continue
 
                 based_image = load_based_image(
