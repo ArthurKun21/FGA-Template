@@ -167,7 +167,9 @@ def run(
         y_ranges_task = progress.add_task("[blue]Y Ranges...", total=total_y_ranges)
 
         for x in range(-offset_x, offset_x + 1):
+            progress.advance(x_ranges_task)
             for y in range(-offset_y, offset_y + 1):
+                progress.advance(y_ranges_task)
                 left_border_offset = left_border + x
                 top_border_offset = top_border + y
                 right_border_offset = right_border + x
@@ -208,7 +210,6 @@ def run(
                     bottom_border=bottom_border_offset,
                 )
                 if based_image_path is None:
-                    progress.advance(y_ranges_task)
                     progress.console.print(
                         "Skipping based image path due to error!"
                     )
@@ -240,8 +241,6 @@ def run(
                 else:
                     progress.console.print(f"Score: [red]{score:.6f}[/red]\t")
                     based_image_path.unlink(missing_ok=True)
-                progress.advance(y_ranges_task)
-            progress.advance(x_ranges_task)
 
     if highest_image_score > 0:
         table = Table(title="Best Match", title_justify="center", show_lines=True)
