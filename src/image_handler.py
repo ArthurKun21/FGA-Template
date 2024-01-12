@@ -18,7 +18,7 @@ def crop_image(
     bottom: int,
 ) -> Optional[Path]:
     try:
-        crop_image_path_name = f"{image_path.stem}_crop{image_path.suffix}"
+        crop_image_path_name = f"{image_path.stem}_crop.png"
         crop_image_path = tmp_folder / crop_image_path_name
         with Image.open(image_path) as img:
             img = img.crop((left, top, right, bottom))
@@ -36,7 +36,7 @@ def resize_template_to_reference(
 ) -> Optional[Path]:
     try:
         resize_image_path_name = (
-            f"{original_image_path.stem}_resize{original_image_path.suffix}"
+            f"{original_image_path.stem}_resize.png"
         )
         resize_image_path = tmp_folder / resize_image_path_name
         with Image.open(original_image_path) as img:
