@@ -24,10 +24,8 @@ def prepare_based_image(
     right_border: int,
     bottom_border: int,
 ) -> Tuple[Optional[Path], Optional[int], Optional[int], Optional[int], Optional[int]]:
-
     renamed_file = (
-        tmp_folder
-        / f"{image_path.stem}_template_left_{left_border}_"
+        tmp_folder / f"{image_path.stem}_template_left_{left_border}_"
         f"top_{top_border}_right_{right_border}_bottom_{bottom_border}.png"
     )
     if renamed_file.exists():
@@ -98,6 +96,120 @@ def match_images(
     _, max_val, _, _ = cv2.minMaxLoc(result)
 
     return max_val
+
+
+def score(
+    image_path: Path,
+    template_path: Path,
+    extra: str,
+    offset_x: int = 0,
+    offset_y: int = 0,
+    left: Optional[int] = None,
+    top: Optional[int] = None,
+    height: Optional[int] = None,
+    width: Optional[int] = None,
+):
+    console.print(f"Creating template from image: [blue]{image_path}[/blue]")
+    tmp_folder = directory_handler.create_tmp_folder(image=image_path, function="match")
+    if extra in border_handler.MeasurementType.__members__:  # type: ignore
+        measurement_type = border_handler.MeasurementType[extra]
+    else:
+        measurement_type = border_handler.MeasurementType.NORMAL
+
+    (
+        left_border,
+        top_border,
+        right_border,
+        bottom_border,
+    ) = border_handler.get_border_from_resize(
+        image_path=image_path,
+        left=left,
+        top=top,
+        template_height=height,
+        template_width=width,
+        measurement_type=measurement_type,
+    )
+
+    (
+        reference_image_resize_width,
+        reference_image_resize_height,
+        _,
+        _,
+        _,
+        _,
+    ) = information_handler.get_border_information_from_resize(
+        reference_image_path=image_path,
+        resize_left=left_border,
+        resize_top=top_border,
+        resize_right=right_border,
+        resize_bottom=bottom_border,
+    )
+
+    template_image_read = cv2.imread(f"{template_path}", cv2.IMREAD_GRAYSCALE)
+
+    left_border_offset = left_border + offset_x
+    top_border_offset = top_border + offset_y
+    right_border_offset = right_border + offset_x
+    bottom_border_offset = bottom_border + offset_y
+
+    if left_border_offset < 0:
+        right_border_offset = right_border_offset - left_border_offset
+        left_border_offset = 0
+
+    if top_border_offset < 0:
+        bottom_border_offset = bottom_border_offset - top_border_offset
+        top_border_offset = 0
+
+    if right_border_offset > reference_image_resize_width:
+        left_border_offset = left_border_offset - (
+            right_border_offset - reference_image_resize_width
+        )
+        right_border_offset = reference_image_resize_width
+
+    if bottom_border_offset > reference_image_resize_height:
+        top_border_offset = top_border_offset - (
+            bottom_border_offset - reference_image_resize_height
+        )
+        bottom_border_offset = reference_image_resize_height
+
+    (
+        based_image_path,
+        orig_left,
+        orig_top,
+        orig_right,
+        orig_bottom,
+    ) = prepare_based_image(
+        image_path=image_path,
+        tmp_folder=tmp_folder,
+        left_border=left_border_offset,
+        top_border=top_border_offset,
+        right_border=right_border_offset,
+        bottom_border=bottom_border_offset,
+    )
+    if based_image_path is None:
+        console.print("Skipping based image path due to error!")
+        return None, None, None
+
+    based_image = load_based_image(
+        image_path=based_image_path,
+    )
+
+    score = match_images(
+        template=template_image_read,
+        input_image=based_image,
+    )
+    info_path = information_handler.print_table_of_information_resize(
+        reference_image_path=image_path,
+        template_image_path=based_image_path,
+        left_border=left_border_offset,
+        top_border=top_border_offset,
+        right_border=right_border_offset,
+        bottom_border=bottom_border_offset,
+        draw_information=True,
+    )
+
+
+    return based_image_path, info_path, score
 
 
 def run(
@@ -210,9 +322,7 @@ def run(
                     bottom_border=bottom_border_offset,
                 )
                 if based_image_path is None:
-                    progress.console.print(
-                        "Skipping based image path due to error!"
-                    )
+                    progress.console.print("Skipping based image path due to error!")
                     continue
 
                 based_image = load_based_image(
