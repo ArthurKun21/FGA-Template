@@ -4,6 +4,7 @@ from gui_handler_match import template_match_events_handler, template_match_layo
 from gui_handler_reverse import template_reverse_events_handler, template_reverse_layout
 from gui_handler_detect_text import template_detect_text_events_handler, template_detect_text_layout
 from gui_handler_text import template_text_events_handler, template_text_layout
+from gui_handler_match_score import template_match_score_events_handler, template_match_score_layout
 
 sg.theme("Dark")
 
@@ -29,6 +30,13 @@ def layout_tab_group():
                 "Match",
                 key="Tab Match",
                 layout=template_match_layout(),
+                expand_x=True,
+                expand_y=True,
+            ),
+            sg.Tab(
+                "Score",
+                key="Tab Match",
+                layout=template_match_score_layout(),
                 expand_x=True,
                 expand_y=True,
             ),
@@ -80,6 +88,7 @@ def main():
         template_match_events_handler(window, event, values)
         template_detect_text_events_handler(window, event, values)
         template_text_events_handler(window, event, values)
+        template_match_score_events_handler(window, event, values)
         if event == sg.WIN_CLOSED:
             break
         if event == sg.WINDOW_CLOSED:
