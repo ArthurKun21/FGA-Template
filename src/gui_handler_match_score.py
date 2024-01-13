@@ -133,7 +133,7 @@ def template_match_score_layout():
             sg.Push(),
             sg.Text(
                 "Offset X",
-                tooltip="Range of pixels to offset in x for the Image MatchScoreing",
+                tooltip="Range of pixels to offset in x for the Image Matching",
             ),
             text_input_validation(
                 inputKey="OffsetXMatchScore",
@@ -144,7 +144,7 @@ def template_match_score_layout():
             ),
             sg.Text(
                 "Offset Y",
-                tooltip="Range of pixels to offset in y for the Image MatchScoreing",
+                tooltip="Range of pixels to offset in y for the Image Matching",
             ),
             text_input_validation(
                 inputKey="OffsetYMatchScore",
