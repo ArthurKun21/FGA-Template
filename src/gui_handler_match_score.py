@@ -137,7 +137,7 @@ def template_match_score_layout():
             ),
             text_input_validation(
                 inputKey="OffsetXMatchScore",
-                default_text="10",
+                default_text="0",
                 expand_x=False,
                 size=(15, 1),
                 justification="center",
@@ -148,7 +148,7 @@ def template_match_score_layout():
             ),
             text_input_validation(
                 inputKey="OffsetYMatchScore",
-                default_text="10",
+                default_text="0",
                 expand_x=False,
                 size=(15, 1),
                 justification="center",
