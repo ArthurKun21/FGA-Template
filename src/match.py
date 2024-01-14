@@ -110,7 +110,7 @@ def score(
     width: Optional[int] = None,
 ):
     console.print(f"Creating template from image: [blue]{image_path}[/blue]")
-    tmp_folder = directory_handler.create_tmp_folder(image=image_path, function="match")
+    tmp_folder = directory_handler.create_tmp_folder(image=image_path, function="score")
     if extra in border_handler.MeasurementType.__members__:  # type: ignore
         measurement_type = border_handler.MeasurementType[extra]
     else:
