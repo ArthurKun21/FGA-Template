@@ -1,3 +1,4 @@
+import json
 import os
 from operator import le
 from pathlib import Path
@@ -6,7 +7,6 @@ from typing import Optional
 import image_handler
 import PySimpleGUI as sg
 import toml
-import json
 
 cwd = Path(__file__).cwd()
 image_extensions = [".png", ".jpg"]
@@ -174,7 +174,16 @@ def load_image_window(
         [
             sg.Frame(
                 "Detected Text",
-                layout=[[sg.Multiline(output_text, expand_x=True, expand_y=True)]],
+                layout=[
+                    [
+                        sg.Multiline(
+                            output_text,
+                            expand_x=True,
+                            expand_y=True,
+                            size=(720, 50),
+                        ),
+                    ],
+                ],
                 visible=multi_line_visibility,
                 key="ImageTextFrame",
                 expand_x=True,
@@ -182,7 +191,7 @@ def load_image_window(
             )
         ],
     ]
-    window = sg.Window(f"{image_path.name}", layout, size=(800, 400))
+    window = sg.Window(f"{image_path.name}", layout, size=(800, 600))
     while True:
         event, _ = window.read()
         if event == sg.WIN_CLOSED:
@@ -380,7 +389,9 @@ def create_directory_column(function: str):
         [
             [
                 sg.Text("Folder"),
-                sg.Input(f"{function_path}", key=f"Folder{function}", enable_events=True),
+                sg.Input(
+                    f"{function_path}", key=f"Folder{function}", enable_events=True
+                ),
                 sg.FolderBrowse(key=f"FolderBrowse{function}", enable_events=True),
                 sg.Button("Load", key=f"Load{function}", enable_events=True),
             ],
